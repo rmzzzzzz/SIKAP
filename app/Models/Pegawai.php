@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Peserta extends Model
+class Pegawai extends Model
 {
-    protected $table = 'peserta';
-    protected $primaryKey = 'id_peserta';
+    protected $table = 'pegawai';
+    protected $primaryKey = 'id_pegawai';
 
     protected $fillable = [
         'opd_id','nama','nip','jabatan','unit_kerja','email','telp'
@@ -20,6 +20,10 @@ class Peserta extends Model
 
     public function kehadiran()
     {
-        return $this->hasMany(Kehadiran::class, 'peserta_id', 'id_peserta');
+        return $this->hasMany(Kehadiran::class, 'pegawai_id', 'id_pegawai');
+    }
+     public function user()
+    {
+        return $this->hasOne(User::class);
     }
 }

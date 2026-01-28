@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Pesertas\Schemas;
+namespace App\Filament\Resources\Pegawais\Schemas;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
-class PesertaForm
+class PegawaiForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -14,6 +15,7 @@ class PesertaForm
                 Select::make('opd_id')
                 ->label('Opd')
                     ->relationship('opd', 'nama_opd')
+                    ->default(fn () => Auth::user()->opd_id)
                     ->searchable(),
                 TextInput::make('nama')
                     ->required(),

@@ -18,9 +18,9 @@ class Kegiatan extends Model
     {
         return $this->belongsTo(Opd::class, 'opd_id', 'id_opd');
     }
-    public function peserta()
+    public function pegawai()
     {
-        return $this->belongsTo(Peserta::class, 'pic', 'id_peserta');
+        return $this->belongsTo(Pegawai::class, 'pic', 'id_pegawai');
     }
 
     public function kehadiran()

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Pesertas\Pages;
+namespace App\Filament\Resources\Kehadirans\Pages;
 
-use App\Filament\Resources\Pesertas\PesertaResource;
+use App\Filament\Resources\Kehadirans\KehadiranResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditPeserta extends EditRecord
+class EditKehadiran extends EditRecord
 {
-    protected static string $resource = PesertaResource::class;
+    protected static string $resource = KehadiranResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -10,13 +10,13 @@ class Kehadiran extends Model
     protected $primaryKey = 'id_kehadiran';
 
     protected $fillable = [
-        'peserta_id','kegiatan_id','tipe_peserta','status_peserta',
+        'pegawai_id','kegiatan_id','tipe_pegawai','status_pegawai',
         'waktu_hadir','latitude_hadir','longitude_hadir','tanda_tangan'
     ];
 
-    public function peserta()
+    public function pegawai()
     {
-        return $this->belongsTo(Peserta::class, 'peserta_id', 'id_peserta');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id_pegawai');
     }
 
     public function kegiatan()

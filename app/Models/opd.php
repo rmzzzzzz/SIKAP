@@ -18,9 +18,9 @@ class Opd extends Model
         return $this->hasMany(User::class, 'opd_id', 'id_opd');
     }
 
-    public function peserta()
+    public function pegawai()
     {
-        return $this->hasMany(Peserta::class, 'opd_id', 'id_opd');
+        return $this->hasMany(Pegawai::class, 'opd_id', 'id_opd');
     }
 
     public function kegiatan()

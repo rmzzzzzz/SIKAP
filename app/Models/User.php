@@ -15,11 +15,15 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role === 'super_admin';
+        return $this->role === 'super_admin' || $this->role === 'operator' || $this->role === 'pimpinan';
     }
 
-    public function opd()
+    public function pegawai()
     {
-        return $this->belongsTo(Opd::class, 'opd_id', 'id_opd');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id', 'id_pegawai');
+    }
+     public function opd()
+    {
+        return $this->pegawai?->opd();
     }
 }
