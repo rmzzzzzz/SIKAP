@@ -11,35 +11,76 @@ class UserForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Select::make('role')
-                    ->options([
-                        'super_admin' => 'Super Admin',
-                        'operator'    => 'Operator',
-                    ])
-                    ->required()
-                    ->live(),
+        return $schema->components([
 
-                Select::make('opd_id')
-                    ->relationship('opd', 'nama_opd')
-                    ->visible(fn($get) => $get('role') === 'operator')
-                    ->required(fn($get) => $get('role') === 'operator'),
+            Select::make('role')
+                ->options([
+                    'super_admin' => 'Super Admin',
+                    'operator'    => 'Operator',
+                ])
+                ->required()
+                ->live(),
 
-                TextInput::make('name')
-                    ->required()
-                    ->unique(ignoreRecord: true),
+            Select::make('opd_filter')
+                ->label('OPD')
+                ->options(
+                    fn() =>
+                    \App\Models\Opd::pluck('nama_opd', 'id_opd')
+                )
+                ->searchable()
+                ->reactive()
+                ->visible(fn($get) => $get('role') === 'operator'),
 
-                TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->unique(ignoreRecord: true),
 
-                TextInput::make('password')
-                    ->password()
-                    ->required(fn($context) => $context === 'create')
-                    ->dehydrateStateUsing(fn($state) => bcrypt($state))
-                    ->dehydrated(fn($state) => filled($state)),
-            ]);
+            Select::make('pegawai_id')
+                ->label('Nama')
+                ->options(function (callable $get) {
+                    $opdId = $get('opd_filter');
+
+                    if (!$opdId) {
+                        return [];
+                    }
+                    return \App\Models\Pegawai::where('opd_id', $opdId)
+                        ->pluck('nama', 'id_pegawai');
+                })
+                ->searchable()
+                ->reactive()
+                ->visible(
+                    fn($get) =>
+                    $get('role') === 'operator' &&
+                        $get('opd_filter') &&
+                        \App\Models\Pegawai::where('opd_id', $get('opd_filter'))->exists()
+                )
+                ->afterStateUpdated(function ($state, callable $set) {
+                    $pegawai = \App\Models\Pegawai::find($state);
+                    if ($pegawai) {
+                        $set('name', $pegawai->nama);
+                    }
+                }),
+
+
+            TextInput::make('name')
+                ->label('Nama')
+                ->required()
+                ->visible(
+                    fn($get) =>
+                    $get('role') !== 'operator' ||
+                        !$get('pegawai_id')
+                ),
+
+
+           
+            TextInput::make('email')
+                ->email()
+                ->required()
+                ->unique(ignoreRecord: true),
+
+         
+            TextInput::make('password')
+                ->password()
+                ->required(fn($context) => $context === 'create')
+                ->dehydrateStateUsing(fn($state) => bcrypt($state))
+                ->dehydrated(fn($state) => filled($state)),
+        ]);
     }
 }

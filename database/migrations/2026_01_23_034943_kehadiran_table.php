@@ -13,19 +13,19 @@ return new class extends Migration
     {
     Schema::create('kehadiran', function (Blueprint $table) {
         $table->id('id_kehadiran');
-        $table->unsignedBigInteger('peserta_id');
+        $table->unsignedBigInteger('pegawai_id');
         $table->unsignedBigInteger('kegiatan_id');
-        $table->enum('tipe_peserta', ['narasumber', 'peserta']);
-        $table->enum('status_peserta', ['internal', 'eksternal']);
-        $table->dateTime('waktu_hadir');
-        $table->decimal('latitude_hadir', 10, 7);
-        $table->decimal('longitude_hadir', 10, 7);
+        $table->enum('tipe_pegawai', ['narasumber', 'pegawai']);
+        $table->enum('status_pegawai', ['internal', 'eksternal']);
+        $table->dateTime('waktu_hadir')->nullable();
+        $table->decimal('latitude_hadir', 10, 7)->nullable();
+        $table->decimal('longitude_hadir', 10, 7)->nullable();
         $table->string('tanda_tangan', 255)->nullable();
         $table->timestamps();
 
-        $table->foreign('peserta_id')
-            ->references('id_peserta')
-            ->on('peserta')
+        $table->foreign('pegawai_id')
+            ->references('id_pegawai')
+            ->on('pegawai')
             ->cascadeOnDelete();
 
         $table->foreign('kegiatan_id')
@@ -34,7 +34,7 @@ return new class extends Migration
             ->cascadeOnDelete();
 
         
-        $table->unique(['peserta_id', 'kegiatan_id']);
+        $table->unique(['pegawai_id', 'kegiatan_id']);
     });
 
     }

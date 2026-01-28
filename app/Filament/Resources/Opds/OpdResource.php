@@ -14,16 +14,23 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
+use Illuminate\Support\Facades\Auth;
 
 class OpdResource extends Resource
 {
     protected static ?string $model = Opd::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-    
+
     protected static string|UnitEnum|null $navigationGroup = 'Master Data';
 
     protected static ?string $recordTitleAttribute = 'nama_opd';
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'super_admin';
+    }
 
     public static function form(Schema $schema): Schema
     {

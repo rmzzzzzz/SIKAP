@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class KegiatanForm
 {
@@ -14,17 +15,19 @@ class KegiatanForm
     {
         return $schema
             ->components([
+                TextInput::make('nama_kegiatan')
+                    ->required(),
                 Select::make('opd_id')
+                    ->default(fn() => Auth::user()->pegawai->opd_id)
                     ->label('Opd')
                     ->relationship('opd', 'nama_opd')
                     ->live()
-                    ->required(),
-                TextInput::make('nama_kegiatan')
-                    ->required(),
+                    ->required()
+                    ->dehydrated(true),
                 Select::make('pic')
                     ->label('PIC')
                     ->relationship(
-                        name: 'peserta',
+                        name: 'pegawai',
                         titleAttribute: 'nama',
                         modifyQueryUsing: function (Builder $query, callable $get) {
                             $opdId = $get('opd_id');
@@ -35,11 +38,11 @@ class KegiatanForm
                         }
                     )
                     ->required(),
-                    select::make('akses_kegiatan')
+                select::make('akses_kegiatan')
                     ->label('Akses Kegiatan')
                     ->options([
-                        'satu opd' => 'Satu OPD',
-                        'lintas opd' => 'Lintas OPD',
+                        'satu opd' => 'Internal',
+                        'lintas opd' => 'Eksternal',
                     ])
                     ->required(),
                 DateTimePicker::make('waktu')
@@ -54,6 +57,21 @@ class KegiatanForm
                     ->required()
                     ->rule('between:-180,180')
                     ->numeric(),
+                Select::make('pegawai_ids')
+                    ->label('Peserta')
+                    ->multiple() // INI KUNCI
+                    ->searchable()
+                    ->options(
+                        fn() =>
+                        \App\Models\Pegawai::query()
+                            ->when(Auth::user()->role === 'operator', function ($q) {
+                                $q->where('opd_id', Auth::user()->opd_id)
+                                    ->orWhereNull('opd_id');
+                            })
+                            ->pluck('nama', 'id_pegawai')
+                    )
+                    ->helperText('Pilih lebih dari satu pegawai')
+                    ->dehydrated(false),
             ]);
     }
 }
