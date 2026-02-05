@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\KegiatanPegawai;
 
 class Kegiatan extends Model
 {
@@ -10,8 +11,15 @@ class Kegiatan extends Model
     protected $primaryKey = 'id_kegiatan';
 
     protected $fillable = [
-        'opd_id','nama_kegiatan','pic','waktu','lokasi',
-        'latitude','longitude','akses_kegiatan'
+        'opd_id',
+        'nama_kegiatan',
+        'pic',
+        'waktu',
+        'lokasi',
+        'latitude',
+        'longitude',
+        'akses_kegiatan',
+        'kehadiran',
     ];
 
     public function opd()
@@ -27,4 +35,14 @@ class Kegiatan extends Model
     {
         return $this->hasMany(Kehadiran::class, 'kegiatan_id', 'id_kegiatan');
     }
+   public function pegawaiWajib()
+{
+    return $this->belongsToMany(
+        \App\Models\Pegawai::class,
+        'kegiatan_pegawai',
+        'kegiatan_id',
+        'pegawai_id'
+    );
+}
+
 }

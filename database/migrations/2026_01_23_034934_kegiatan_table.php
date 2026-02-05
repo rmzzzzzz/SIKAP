@@ -21,6 +21,7 @@ return new class extends Migration
         $table->decimal('latitude', 10, 7);
         $table->decimal('longitude', 10, 7);
         $table->enum('akses_kegiatan',['satu opd','lintas opd']);
+         $table->boolean('buat_kehadiran')->default(true);
         $table->timestamps();
 
         $table->foreign('opd_id')

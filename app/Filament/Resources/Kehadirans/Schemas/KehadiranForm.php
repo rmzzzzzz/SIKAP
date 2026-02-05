@@ -13,16 +13,16 @@ class KehadiranForm
     {
         return $schema
             ->components([
-                TextInput::make('peserta_id')
+                TextInput::make('pegawai_id')
                     ->required()
                     ->numeric(),
                 TextInput::make('kegiatan_id')
                     ->required()
                     ->numeric(),
-                Select::make('tipe_peserta')
+                Select::make('tipe_pegawai')
                     ->options(['narasumber' => 'Narasumber', 'peserta' => 'Peserta'])
                     ->required(),
-                Select::make('status_peserta')
+                Select::make('status_pegawai')
                     ->options(['internal' => 'Internal', 'eksternal' => 'Eksternal'])
                     ->required(),
                 DateTimePicker::make('waktu_hadir'),

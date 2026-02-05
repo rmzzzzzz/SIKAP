@@ -16,4 +16,14 @@ class EditKegiatan extends EditRecord
             DeleteAction::make(),
         ];
     }
-}
+      protected function afterSave(): void
+    {
+        $state = $this->form->getState();
+
+        if (array_key_exists('pegawai_ids', $state)) {
+            $this->record
+                ->pegawaiWajib()
+                ->sync($state['pegawai_ids']);
+        }
+    }
+}  

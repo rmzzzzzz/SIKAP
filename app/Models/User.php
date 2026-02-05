@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements FilamentUser
 {
       protected $fillable = [
-        'opd_id','name','email','password','role'
+        'pegawai_id','name','email','password','role'
     ];
 
     protected $hidden = ['password'];
@@ -24,6 +24,13 @@ class User extends Authenticatable implements FilamentUser
     }
      public function opd()
     {
-        return $this->pegawai?->opd();
+        return $this->hasOneThrough(
+            Opd::class,        
+            Pegawai::class,    // Model perantara (Pegawai)
+            'id_pegawai',      // Foreign key di tabel pegawai (yang connect ke user)
+            'id_opd',              // Primary key di tabel opd
+            'pegawai_id',      // Local key di tabel users
+            'opd_id' 
+            );// Foreign key di tabel pegawai (yang connect ke opd)    
     }
 }

@@ -26,4 +26,16 @@ class Pegawai extends Model
     {
         return $this->hasOne(User::class);
     }
+    public function kegiatanWajib()
+{
+    return $this->belongsToMany(
+            Kegiatan::class,
+            'kegiatan_pegawai',
+            'pegawai_id',
+            'kegiatan_id',
+            'id_pegawai',
+            'id_kegiatan'
+        );
+}
+
 }

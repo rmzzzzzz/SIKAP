@@ -2,76 +2,111 @@
 
 namespace App\Filament\Resources\Kegiatans\Schemas;
 
-use Filament\Forms\Components\Select;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\DateTimePicker;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Toggle;
+use App\Models\Pegawai;
 
 class KegiatanForm
 {
     public static function configure(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('nama_kegiatan')
-                    ->required(),
-                Select::make('opd_id')
-                    ->default(fn() => Auth::user()->pegawai->opd_id)
-                    ->label('Opd')
-                    ->relationship('opd', 'nama_opd')
-                    ->live()
-                    ->required()
-                    ->dehydrated(true),
-                Select::make('pic')
-                    ->label('PIC')
-                    ->relationship(
-                        name: 'pegawai',
-                        titleAttribute: 'nama',
-                        modifyQueryUsing: function (Builder $query, callable $get) {
-                            $opdId = $get('opd_id');
+        return $schema->schema([
 
-                            if ($opdId) {
-                                $query->where('opd_id', $opdId);
-                            }
+            TextInput::make('nama_kegiatan')
+                ->label('Nama Kegiatan')
+                ->required(),
+
+            /** OPD */
+            Select::make('opd_id')
+                ->label('OPD')
+                ->relationship('opd', 'nama_opd')
+                ->default(fn() => Auth::user()?->pegawai?->opd_id)
+                ->disabled(fn() => Auth::user()->role === 'operator')
+                ->live()
+                ->dehydrated(true)
+                ->required(),
+            Select::make('pic')
+                ->label('Penanggung Jawab (PIC)')
+                ->relationship(
+                    name: 'pegawai',
+                    titleAttribute: 'nama',
+                    modifyQueryUsing: function (Builder $query, callable $get) {
+                        $opdId = $get('opd_id');
+                        if ($opdId) {
+                            $query->where('opd_id', $opdId);
                         }
-                    )
-                    ->required(),
-                select::make('akses_kegiatan')
-                    ->label('Akses Kegiatan')
-                    ->options([
-                        'satu opd' => 'Internal',
-                        'lintas opd' => 'Eksternal',
-                    ])
-                    ->required(),
-                DateTimePicker::make('waktu')
-                    ->required(),
-                TextInput::make('lokasi')
-                    ->required(),
-                TextInput::make('latitude')
-                    ->required()
-                    ->rule('between:-90,90')
-                    ->numeric(),
-                TextInput::make('longitude')
-                    ->required()
-                    ->rule('between:-180,180')
-                    ->numeric(),
-                Select::make('pegawai_ids')
-                    ->label('Peserta')
-                    ->multiple() // INI KUNCI
-                    ->searchable()
-                    ->options(
-                        fn() =>
-                        \App\Models\Pegawai::query()
-                            ->when(Auth::user()->role === 'operator', function ($q) {
-                                $q->where('opd_id', Auth::user()->opd_id)
-                                    ->orWhereNull('opd_id');
-                            })
-                            ->pluck('nama', 'id_pegawai')
-                    )
-                    ->helperText('Pilih lebih dari satu pegawai')
-                    ->dehydrated(false),
-            ]);
+                    }
+                )
+                ->searchable()
+                ->preload()
+                ->reactive()
+                ->required(),
+            Select::make('akses_kegiatan')
+                ->label('Akses Kegiatan')
+                ->options([
+                    'satu opd'   => 'Internal',
+                    'lintas opd' => 'eksternal',
+                ])
+                ->required(),
+
+            DateTimePicker::make('waktu')
+                ->label('Waktu Kegiatan')
+                ->required(),
+
+            TextInput::make('lokasi')
+                ->label('Lokasi')
+                ->required(),
+
+            TextInput::make('latitude')
+                ->numeric()
+                ->rule('between:-90,90')
+                ->required(),
+
+            TextInput::make('longitude')
+                ->numeric()
+                ->rule('between:-180,180')
+                ->required(),
+
+            CheckboxList::make('pegawai_ids')
+                ->label('Daftar Pegawai Wajib Hadir')
+                ->columns(2)
+                ->bulkToggleable()
+                ->searchable()
+                ->reactive()
+                ->options(function (callable $get) {
+
+                    $opdId = $get('opd_id');
+                    $akses = $get('akses_kegiatan');
+
+                    if ($akses !== 'satu opd' || ! $opdId) {
+                        return [];
+                    }
+
+                    return Pegawai::where('opd_id', $opdId)
+                        ->pluck('nama', 'id_pegawai');
+                })
+                ->default(
+                    fn($record) =>
+                    $record?->pegawaiWajib?->pluck('id_pegawai')->toArray()
+                )
+                ->dehydrated(true),
+
+
+            Toggle::make('buat_kehadiran')
+                ->label('Gunakan Kehadiran')
+                ->helperText('Aktifkan jika kegiatan memerlukan pencatatan kehadiran')
+                ->default(true)
+                ->dehydrated(true)
+                ->dehydrateStateUsing(fn($state) => $state ? 1 : 0)
+                ->required(),
+                
+        ]);
+         
     }
 }

@@ -24,7 +24,7 @@ class KegiatanResource extends Resource
     protected static ?string $model = Kegiatan::class;
 
     protected static string|BackedEnum|null $navigationIcon =
-        Heroicon::OutlinedRectangleStack;
+    Heroicon::OutlinedRectangleStack;
 
     protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
 
@@ -43,7 +43,7 @@ class KegiatanResource extends Resource
     public static function getRelations(): array
     {
         return [
-            KehadiranRelationManager::class,
+            // KehadiranRelationManager::class,
         ];
     }
 
@@ -56,13 +56,13 @@ class KegiatanResource extends Resource
         ];
     }
     public static function getEloquentQuery(): Builder
-{
-    $query = parent::getEloquentQuery();
-    $user = Auth::user();
-    if ($user->role === 'operator') {
-        $query->where('opd_id', $user->pegawai->opd_id);
-    }
+    {
+        $query = parent::getEloquentQuery();
+        $user = Auth::user();
+        if ($user->role === 'operator') {
+            $query->where('opd_id', $user->pegawai->opd_id);
+        }
 
-    return $query;
-}
+        return $query;
+    }
 }
