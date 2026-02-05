@@ -28,8 +28,8 @@ return new class extends Migration
             ->on('opd')
             ->cascadeOnDelete();
         $table->foreign('pic')
-            ->references('id_peserta')
-            ->on('peserta')
+            ->references('id_pegawai')
+            ->on('pegawai')
             ->cascadeOnDelete();
     });
 
