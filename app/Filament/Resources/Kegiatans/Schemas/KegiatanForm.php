@@ -17,7 +17,6 @@ class KegiatanForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->schema([
-
             TextInput::make('nama_kegiatan')
                 ->label('Nama Kegiatan')
                 ->required(),

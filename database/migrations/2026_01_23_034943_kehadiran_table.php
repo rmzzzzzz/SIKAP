@@ -20,7 +20,7 @@ return new class extends Migration
         $table->dateTime('waktu_hadir')->nullable();
         $table->decimal('latitude_hadir', 10, 7)->nullable();
         $table->decimal('longitude_hadir', 10, 7)->nullable();
-        $table->string('tanda_tangan', 255)->nullable();
+        $table->longText('tanda_tangan')->nullable();
         $table->timestamps();
 
         $table->foreign('pegawai_id')
