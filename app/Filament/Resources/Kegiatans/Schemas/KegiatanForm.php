@@ -18,7 +18,7 @@ class KegiatanForm
                 TextInput::make('nama_kegiatan')
                     ->required(),
                 Select::make('opd_id')
-                    ->default(fn() => Auth::user()->pegawai->opd_id)
+                    ->default(fn() => Auth::user()->opd_id)
                     ->label('Opd')
                     ->relationship('opd', 'nama_opd')
                     ->live()
