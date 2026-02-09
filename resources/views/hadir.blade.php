@@ -27,13 +27,6 @@
 @endpush
 
 @section('content')
-    {{-- TOMBOL KEMBALI --}}
-    <div class="mb-8 flex justify-end">
-        <a href="{{ url('/') }}" class="btn-back inline-flex items-center gap-3 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest shadow-sm">
-            <i class="fa-solid fa-chevron-left"></i> Kembali ke Beranda
-        </a>
-    </div>
-
     {{-- HEADER KEGIATAN --}}
     <div class="text-center mb-12">
         <h2 class="text-[#5B4636] font-black tracking-[0.4em] text-[10px] italic">PRESENSI DIGITAL</h2>
@@ -98,7 +91,7 @@
             <canvas id="sig-pad" class="w-full h-72 mb-6"></canvas>
 
             <div class="flex justify-center mb-6 scale-90 md:scale-100">
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
             </div>
 
             <button type="submit" id="btnSubmit" class="bg-gradient-to-r from-[#2F5F5E] to-[#5B4636] py-5 rounded-2xl font-black tracking-widest text-white shadow-xl hover:scale-[1.02] transition-transform active:scale-95 disabled:opacity-50">

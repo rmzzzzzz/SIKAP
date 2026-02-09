@@ -12,7 +12,9 @@ use Filament\Tables\Table;
 class KehadiransTable
 {
     public static function configure(Table $table): Table
+    
     {
+        
         return $table
         ->defaultSort('waktu', 'desc')
               ->columns([

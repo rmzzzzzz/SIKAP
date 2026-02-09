@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Laporans\Pages;
 
+
+
 use App\Filament\Resources\Laporans\LaporanResource;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions\Action;
@@ -10,36 +12,70 @@ use Filament\Forms\Components\Hidden;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\View;
+use Filament\Forms\Components\ViewField;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry;
 
 class ViewLaporan extends ViewRecord
 {
     protected static string $resource = LaporanResource::class;
+    public function infolist(Schema $schema): Schema
+    {
+
+        return $schema->schema([
+            Section::make('Detail Kegiatan')
+            ->columns(6)
+            ->columnSpan('full')
+                ->schema([
+                    TextEntry::make('kegiatan.nama_kegiatan')
+                        ->label('Nama Kegiatan'),
+
+                    TextEntry::make('kegiatan.tanggal')
+                        ->label('Tanggal')
+                        ->date(),
+
+                    TextEntry::make('kegiatan.lokasi')
+                        ->label('Lokasi'),
+                    TextEntry::make('total_hadir')
+                        ->label('Total Hadir')
+                        ->badge()
+                        ->color('success'),
+              
+                    TextEntry::make('status_persetujuan')
+                        ->badge(),
+
+                    TextEntry::make('waktu_persetujuan')
+                        ->label('Waktu Persetujuan')
+                        ->dateTime('d M Y')
+                        ->visible(fn($record) => $record->waktu_persetujuan),
+               
+                    // ImageEntry::make('ttd_pimpinan')
+                    //     ->label(false)
+                    //     ->height(120)
+                    //     ->visible(fn($record) => $record->ttd_pimpinan),
+                ]),
+        ]);
+    }
+
 
     protected function getHeaderActions(): array
     {
         return [
-
-            // ✅ TOMBOL SETUJUI
             Action::make('setujui')
                 ->label('Setujui & Tanda Tangan')
                 ->color('primary')
 
-                ->visible(fn () =>
+                ->visible(
+                    fn() =>
                     Auth::user()->role === 'pimpinan' &&
-                    $this->record->status_persetujuan === 'menunggu'
+                        $this->record->status_persetujuan === 'menunggu'
                 )
-//   ->form([
-//     View::make('components.signature-pad'),
-
-//     Hidden::make('ttd'), // ini penampung base64 dari canvas
-
-//     Hidden::make('status_persetujuan')
-//         ->default('disetujui'),
-// ])
-
                 ->form([
-                    Textarea::make('ttd')
-                        ->label('Tanda Tangan (Base64)')
+                    ViewField::make('ttd')
+                        ->label('Tanda Tangan Pimpinan')
+                        ->view('components.signature-pad')
                         ->required(),
 
                     Hidden::make('status_persetujuan')
@@ -49,7 +85,8 @@ class ViewLaporan extends ViewRecord
                 ->action(function (array $data) {
                     $this->record->update([
                         'ttd_pimpinan' => $data['ttd'],
-                        'status_persetujuan' => $data['status_persetujuan'],
+                        'status_persetujuan' => 'disetujui',
+                        'waktu_persetujuan' => now(),
                     ]);
 
                     Notification::make()
@@ -63,11 +100,13 @@ class ViewLaporan extends ViewRecord
                 ->label('Cetak PDF')
                 ->icon('heroicon-o-printer')
                 ->color('success')
-                ->url(fn () =>
+                ->url(
+                    fn() =>
                     route('laporan.pdf', $this->record->id_laporan)
                 )
                 ->openUrlInNewTab()
-                ->visible(fn () =>
+                ->visible(
+                    fn() =>
                     $this->record->status_persetujuan === 'disetujui'
                 ),
         ];

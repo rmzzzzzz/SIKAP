@@ -19,55 +19,6 @@ use Illuminate\Support\Facades\Auth;
 class ViewKehadiran extends ViewRecord
 {
     protected static string $resource = KehadiranResource::class;
-
-    // protected function getHeaderActions(): array
-    // {
-    //     return [
-    //     Action::make('ajukanLaporan')
-    //         ->label('Ajukan Laporan')
-    //         ->icon('heroicon-o-paper-airplane')
-    //         ->color('primary')
-
-    //         ->visible(function () {
-    //             $record = $this->record; // BUKAN getRecord()
-    //             $user   = Auth::user();
-
-    //             // 🔥 role yang benar
-    //             if ($user->role !== 'operator') {
-    //                 return false;
-    //             }
-
-    //             // 🔥 cek laporan sudah ada atau belum
-    //             return ! Laporan::where(
-    //                 'kegiatan_id',
-    //                 $record->id_kegiatan
-    //             )->exists();
-    //         })
-
-    //         ->requiresConfirmation()
-
-    //         ->action(function () {
-    //             $record = $this->record;
-
-    //             $totalHadir = Kehadiran::where(
-    //                 'kegiatan_id',
-    //                 $record->id_kegiatan
-    //             )->count();
-
-    //             Laporan::create([
-    //                 'kegiatan_id' => $record->id_kegiatan,
-    //                 'opd_id' => $record->opd_id,
-    //                 'total_hadir' => $totalHadir,
-    //                 'status_persetujuan' => 'menunggu',
-    //             ]);
-
-    //             Notification::make()
-    //                 ->title('Laporan berhasil diajukan')
-    //                 ->success()
-    //                 ->send();
-    //         }),
-    // ];
-    // }
     protected function getActions(): array
     {
         return [
@@ -83,7 +34,7 @@ class ViewKehadiran extends ViewRecord
                     if ($user->role !== 'operator') {
                         return false;
                     }
-                    return true;
+                    
                     return ! Laporan::where(
                         'kegiatan_id',
                         $record->id_kegiatan
@@ -120,7 +71,8 @@ class ViewKehadiran extends ViewRecord
 
         return $schema->schema([
             Section::make('Detail Kegiatan')
-                ->columns(2)
+                ->columns(4)
+                ->columnSpan('full')
                 ->schema([
                     TextEntry::make('nama_kegiatan')->label('Kegiatan'),
                     TextEntry::make('opd.nama_opd')->label('OPD'),
@@ -129,15 +81,20 @@ class ViewKehadiran extends ViewRecord
                 ]),
 
             Section::make('Daftar Kehadiran')
+            ->columnSpan('full')
                 ->schema([
                     RepeatableEntry::make('kehadiran')
                         ->label(false)
+                        ->columns(4)
+                        
                         ->schema([
                             TextEntry::make('pegawai.nama')
                                 ->label('Nama Pegawai'),
 
                             TextEntry::make('pegawai.jabatan')
                                 ->label('Jabatan'),
+                            TextEntry::make('pegawai.opd.nama_opd')
+                                ->label('OPD'),
 
                             TextEntry::make('status_pegawai')
                                 ->label('Status')
@@ -147,7 +104,7 @@ class ViewKehadiran extends ViewRecord
                                     $state === 'internal' ? 'success' : 'warning'
                                 ),
                         ])
-                        ->columns(3),
+                        
                 ]),
         ]);
     }

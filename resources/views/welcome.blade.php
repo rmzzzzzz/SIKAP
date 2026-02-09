@@ -16,47 +16,55 @@
     </div>
 
     <div id="kegiatanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @forelse($kegiatan as $item)
-        <div class="kegiatan-card glass-card rounded-[3rem] overflow-hidden flex flex-col justify-between hover:border-[#2F5F5E] transition-all duration-500 hover:-translate-y-2 shadow-xl">
-            <div class="p-10">
-                <div class="flex items-start gap-6">
-                    <div class="bg-gradient-to-tr from-[#2F5F5E] to-[#3E7A78] w-16 h-16 rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg shrink-0 text-white">
-                        {{ $loop->iteration }}
+    @forelse($kegiatan as $item)
+    <div class="kegiatan-card bg-white rounded-[2.5rem] overflow-hidden flex flex-col shadow-lg border border-[#D6D1C4]/30 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+        <div class="p-8">
+            <div class="flex items-center gap-5 mb-8">
+                <div class="bg-[#2F5F5E] w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg shrink-0 text-white">
+                    {{ $loop->iteration }}
+                </div>
+                <h3 class="nama-kegiatan font-extrabold text-lg leading-tight uppercase tracking-tight text-[#2F5F5E]">
+                    {{ $item->nama_kegiatan }}
+                </h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-5 bg-[#F0EFE9] p-5 rounded-[1.5rem] border border-[#D6D1C4]/50">
+                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#2F5F5E]">
+                        <i class="fa-regular fa-clock text-xl"></i>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="nama-kegiatan font-extrabold text-xl mb-6 leading-tight uppercase tracking-tight italic text-[#2F5F5E]">
-                            {{ $item->nama_kegiatan }}
-                        </h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-4 bg-[#F0EFE9] p-3 rounded-xl">
-                                <i class="fa-regular fa-clock text-[#2F5F5E] text-lg"></i>
-                                <div>
-                                    <p class="text-[10px] text-gray-500 uppercase font-bold">Waktu</p>
-                                    <p class="text-sm font-semibold text-gray-700">{{ date('H:i', strtotime($item->waktu)) }} WIB</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4 bg-[#F0EFE9] p-3 rounded-xl">
-                                <i class="fa-solid fa-location-dot text-[#2F5F5E] text-lg"></i>
-                                <div>
-                                    <p class="text-[10px] text-gray-500 uppercase font-bold">Lokasi</p>
-                                    <p class="text-sm font-semibold text-gray-700">{{ $item->lokasi }}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Waktu</p>
+                        <p class="text-sm font-bold text-[#2F5F5E]">{{ date('H:i', strtotime($item->waktu)) }} WIB</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-5 bg-[#F0EFE9] p-5 rounded-[1.5rem] border border-[#D6D1C4]/50">
+                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#2F5F5E]">
+                        <i class="fa-solid fa-location-dot text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Lokasi</p>
+                        <p class="text-sm font-bold text-[#2F5F5E] line-clamp-1">{{ $item->lokasi }}</p>
                     </div>
                 </div>
             </div>
-            <a href="{{ url('/hadir/'.$item->id_kegiatan) }}" class="bg-gradient-to-r from-[#2F5F5E] to-[#5B4636] hover:from-[#3A6F6E] hover:to-[#6A5242] text-center py-6 font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 text-white">
-                ISI DAFTAR HADIR <i class="fa-solid fa-signature text-xl"></i>
+        </div>
+
+        <div class="px-8 pb-8 mt-auto">
+            <a href="{{ url('/hadir/'.$item->id_kegiatan) }}" 
+               class="bg-gradient-to-r from-[#2F5F5E] to-[#5B4636] hover:brightness-110 text-white text-center py-5 rounded-2xl font-black text-xs tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 shadow-lg shadow-[#2F5F5E]/20">
+                <i class="fa-solid fa-signature text-lg"></i> ISI DAFTAR HADIR
             </a>
         </div>
-        @empty
-            <div class="col-span-full text-center py-20 opacity-50">
-                <i class="fa-solid fa-calendar-xmark text-6xl mb-4"></i>
-                <p class="font-bold">Belum ada agenda lintas OPD untuk hari ini.</p>
-            </div>
-        @endforelse
     </div>
+    @empty
+        <div class="col-span-full text-center py-20 opacity-50">
+            <i class="fa-solid fa-calendar-xmark text-6xl mb-4 text-[#2F5F5E]"></i>
+            <p class="font-bold text-[#2F5F5E]">Belum ada agenda lintas OPD untuk hari ini.</p>
+        </div>
+    @endforelse
+</div>
 @endsection
 
 @push('scripts')

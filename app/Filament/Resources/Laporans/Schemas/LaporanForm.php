@@ -13,7 +13,7 @@ class LaporanForm
     {
         return $schema
             ->components([
-                Textarea::make('ttd_pimpinan')
+                Textarea::make('ttd')
                     ->label('Tanda Tangan Pimpinan (Base64)')
                     ->visible(fn() => Auth::user()->role === 'pimpinan')
                     ->required(),

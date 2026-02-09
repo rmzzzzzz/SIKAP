@@ -22,9 +22,10 @@ class OpdResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Master Data';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Data';
 
     protected static ?string $recordTitleAttribute = 'nama_opd';
+    protected static ?string $navigationLabel = 'OPD';
     public static function canViewAny(): bool
     {
         $user = Auth::user();

@@ -2,14 +2,9 @@
 
 namespace App\Filament\Resources\Kehadirans;
 
-use App\Filament\Resources\Kehadirans\Pages\CreateKehadiran;
-use App\Filament\Resources\Kehadirans\Pages\EditKehadiran;
 use App\Filament\Resources\Kehadirans\Pages\ListKehadirans;
 use App\Filament\Resources\Kehadirans\Pages\ViewKehadiran;
-use App\Filament\Resources\Kehadirans\Schemas\KehadiranForm;
-use App\Filament\Resources\Kehadirans\Schemas\KehadiranInfolist;
 use App\Filament\Resources\Kehadirans\Tables\KehadiransTable;
-use App\Models\Kehadiran;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -32,15 +27,6 @@ class KehadiranResource extends Resource
     protected static ?string $navigationLabel = 'Kehadiran';
     protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
 
-    // public static function form(Schema $schema): Schema
-    // {
-    //     return KehadiranForm::configure($schema);
-    // }
-
-    // public static function infolist(Schema $schema): Schema
-    // {
-    //     return KehadiranInfolist::configure($schema);
-    // }
 
     public static function table(Table $table): Table
     {
@@ -65,7 +51,7 @@ class KehadiranResource extends Resource
     {
         $query = parent::getEloquentQuery()
         ->where('buat_kehadiran', true)
-            ->whereHas('kehadiran')
+            // ->whereHas('kehadiran')
             ->withCount([
                 'kehadiran as total_hadir'
             ]);

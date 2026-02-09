@@ -26,7 +26,7 @@ return new class extends Migration
             $table->enum('status_persetujuan', ['menunggu', 'disetujui', 'ditolak'])
                 ->default('menunggu');
 
-            $table->string('ttd_pimpinan')->nullable();
+            $table->longText('ttd_pimpinan')->nullable();
             $table->timestamp('waktu_persetujuan')->nullable();
 
             $table->timestamps();

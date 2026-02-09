@@ -77,13 +77,12 @@ class KegiatanForm
                 ->columns(2)
                 ->bulkToggleable()
                 ->searchable()
-                ->reactive()
                 ->options(function (callable $get) {
 
                     $opdId = $get('opd_id');
                     $akses = $get('akses_kegiatan');
 
-                    if ($akses !== 'satu opd' || ! $opdId) {
+                    if ($akses !== 'satu opd') {
                         return [];
                     }
 
@@ -94,6 +93,7 @@ class KegiatanForm
                     fn($record) =>
                     $record?->pegawaiWajib?->pluck('id_pegawai')->toArray()
                 )
+                ->reactive()
                 ->dehydrated(true),
 
 

@@ -19,46 +19,7 @@ class ViewKegiatan extends ViewRecord
 {
     protected static string $resource = KegiatanResource::class;
 
-    // protected function getHeaderActions(): array
-    // {
-    //     return [
-    //         Action::make('ajukanLaporan')
-    //         ->label('Ajukan Laporan')
-    //         ->icon('heroicon-o-paper-airplane')
-    //         ->color('primary')
-    //         ->visible(function () {
-    //             $user = Auth::user();
-
-    //             if ($user->role !== 'operator') {
-    //                 return false;
-    //             }
-
-    //             return ! Laporan::where(
-    //                 'kegiatan_id',
-    //                 $this->getRecord()->id_kegiatan
-    //             )->exists();
-    //         })
-    //         ->action(function () {
-    //             $kegiatan = $this->getRecord();
-
-    //             $totalHadir = Kehadiran::where(
-    //                 'kegiatan_id',
-    //                 $kegiatan->id_kegiatan
-    //             )->count();
-
-    //             Laporan::create([
-    //                 'kegiatan_id' => $kegiatan->id_kegiatan,
-    //                 'opd_id' => $kegiatan->opd_id,
-    //                 'total_hadir' => $totalHadir,
-    //                 'status_persetujuan' => 'menunggu',
-    //             ]);
-
-    //             \Filament\Notifications\Notification::make()
-    //                 ->title('Laporan berhasil diajukan')
-    //                 ->success()
-    //                 ->send();
-    //         }),];
-    // }
+    
 
     public function infolist(Schema $schema): Schema
     {
@@ -66,7 +27,8 @@ class ViewKegiatan extends ViewRecord
 
         return $schema->schema([
             Section::make('Detail Kegiatan')
-                ->columns(2)
+                ->columns(5)
+                ->columnSpan('full')
                 ->schema([
                     TextEntry::make('nama_kegiatan')
                         ->label('Nama Kegiatan')
@@ -96,6 +58,7 @@ class ViewKegiatan extends ViewRecord
 
             Section::make('Daftar Wajib Hadir (Pegawai Internal)')
                 ->visible(fn() => $kegiatan->akses_kegiatan === 'satu opd')
+                ->columnSpan('full')
                 ->schema([
                     RepeatableEntry::make('pegawai_wajib')
                         ->columns(4)

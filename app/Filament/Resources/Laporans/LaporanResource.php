@@ -16,6 +16,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class LaporanResource extends Resource
 {
@@ -24,6 +25,8 @@ class LaporanResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'laporan';
+    protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
+    protected static ?string $navigationLabel = 'Laporan';
 
     public static function form(Schema $schema): Schema
     {
@@ -63,4 +66,5 @@ class LaporanResource extends Resource
 
         return $query;
     }
+    
 }

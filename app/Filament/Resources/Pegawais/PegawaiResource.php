@@ -22,7 +22,7 @@ class PegawaiResource extends Resource
     protected static ?string $model = Pegawai::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-    protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
+    protected static string|UnitEnum|null $navigationGroup = 'Manajemen Data';
     protected static ?string $recordTitleAttribute = 'nama_Pegawai';
     protected static ?string $navigationLabel = 'Pegawai';
 

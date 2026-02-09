@@ -27,7 +27,7 @@ class KegiatanResource extends Resource
     Heroicon::OutlinedRectangleStack;
 
     protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
-
+    protected static ?string $navigationLabel = 'Kegiatan';
     protected static ?string $recordTitleAttribute = 'nama_kegiatan';
 
     public static function form(Schema $schema): Schema

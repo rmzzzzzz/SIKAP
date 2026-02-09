@@ -17,3 +17,7 @@ Route::get('/hadir/{id}', [KegiatanController::class, 'hadir']);
 
 // Proses Simpan Presensi (Submit Form)
 Route::post('/hadir/{id}', [KegiatanController::class, 'storeHadir']);
+
+Route::get('/login', function () {
+    return redirect()->route('filament.admin.auth.login');
+})->name('login');
