@@ -10,7 +10,7 @@ class Opd extends Model
     protected $primaryKey = 'id_opd';
 
     protected $fillable = [
-        'nama_opd'
+        'nama_opd','alamat','email','website',
     ];
 
     public function users()

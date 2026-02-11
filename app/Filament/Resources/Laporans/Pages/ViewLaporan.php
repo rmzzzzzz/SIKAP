@@ -32,7 +32,7 @@ class ViewLaporan extends ViewRecord
                     TextEntry::make('kegiatan.nama_kegiatan')
                         ->label('Nama Kegiatan'),
 
-                    TextEntry::make('kegiatan.tanggal')
+                    TextEntry::make('kegiatan.waktu')
                         ->label('Tanggal')
                         ->date(),
 

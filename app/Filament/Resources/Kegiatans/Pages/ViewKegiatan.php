@@ -51,7 +51,7 @@ class ViewKegiatan extends ViewRecord
                         })
                         ->formatStateUsing(fn(string $state) => match ($state) {
                             'satu opd'    => 'Internal',
-                            'lintas opd'  => 'Lintas OPD',
+                            'lintas opd'  => 'Eksternal',
                             default       => ucfirst(str_replace('_', ' ', $state)),
                         }),
                 ]),

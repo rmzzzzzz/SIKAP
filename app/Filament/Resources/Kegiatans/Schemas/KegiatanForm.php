@@ -79,13 +79,13 @@ class KegiatanForm
                 ->searchable()
                 ->options(function (callable $get) {
 
-                    $opdId = $get('opd_id');
                     $akses = $get('akses_kegiatan');
-
+                    
                     if ($akses !== 'satu opd') {
                         return [];
-                    }
-
+                        }
+                        
+                    $opdId = $get('opd_id');
                     return Pegawai::where('opd_id', $opdId)
                         ->pluck('nama', 'id_pegawai');
                 })
