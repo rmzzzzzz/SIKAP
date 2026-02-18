@@ -212,7 +212,7 @@
         <header class="flex justify-between items-center page-header">
             <div class="flex items-center gap-4">
                 <div id="logoBtn">
-                    <i class="fa-solid fa-calendar-check text-white"></i>
+                    <i class="fa-solid fa-bars text-white"></i>
                 </div>
                 <div class="flex flex-col justify-center">
                     <h1 class="brand-fancy">HADIR</h1>
