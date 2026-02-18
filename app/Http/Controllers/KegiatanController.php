@@ -14,16 +14,16 @@ class KegiatanController extends Controller
 {
     /**
      * Halaman Beranda (welcome)
-     * Menampilkan kegiatan lintas OPD hari ini
+     * Menampilkan kegiatan lintas OPD hari ini secara default, 
+     * dan menyertakan internal agar bisa dicari via search bar.
      */
     public function index()
     {
         Carbon::setLocale('id');
 
-        $kegiatan = Kegiatan::where('akses_kegiatan', 'lintas opd')
-
-            ->whereDate('tanggal', Carbon::today())   
-            ->orderBy('waktu_mulai', 'asc')            
+        // MENGHAPUS filter 'lintas opd' agar data internal ikut terambil
+        $kegiatan = Kegiatan::whereDate('tanggal', Carbon::today())
+            ->orderBy('waktu_mulai', 'asc')
             ->get();
 
         return view('welcome', compact('kegiatan'));
@@ -38,12 +38,10 @@ class KegiatanController extends Controller
 
         $kegiatan = Kegiatan::with('opd')
             ->whereDate('tanggal', Carbon::today())
-            ->orderBy('waktu_mulai', 'asc')            // ✅ urut jam mulai
-
+            ->orderBy('waktu_mulai', 'asc')
             ->get();
 
         $list_opd = Opd::orderBy('nama_opd', 'asc')->get();
-        //memanggil 'agenda-opd'
 
         return view('agenda-opd', compact('kegiatan', 'list_opd'));
     }

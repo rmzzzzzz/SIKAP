@@ -162,30 +162,18 @@ const RADIUS_MAKSIMAL = 25;
 const pegawai = @json($pegawai);
 const box = document.getElementById('dynamic-form');
 
-// --- LOGIKA NOTIFIKASI & IZIN ---
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Cek jika ada notifikasi sukses (Prioritas Tertinggi)
     @if(session('success'))
-        Swal.fire({ 
-            icon: 'success', 
-            title: 'Berhasil!', 
-            text: "{{ session('success') }}", 
-            confirmButtonColor: '#20B2AA' 
-        });
-    // 2. Cek jika ada notifikasi error
+        Swal.fire({ icon: 'success', title: 'Berhasil!', text: "{{ session('success') }}", confirmButtonColor: '#20B2AA' });
     @elseif(session('error'))
-        Swal.fire({ 
-            icon: 'error', 
-            title: 'Opps!', 
-            text: "{{ session('error') }}", 
-            confirmButtonColor: '#20B2AA' 
-        });
-    // 3. Jika tidak ada notifikasi, baru tampilkan pop-up izin lokasi
+        Swal.fire({ icon: 'error', title: 'Opps!', text: "{{ session('error') }}", confirmButtonColor: '#20B2AA' });
     @else
         Swal.fire({
             title: 'IZIN AKSES LOKASI',
             html: 'Aplikasi memerlukan akses GPS untuk memvalidasi kehadiran Anda.<br><small class="text-gray-500 italic">*Pastikan GPS Anda aktif</small>',
-            iconHtml: '<i class="fa-solid fa-location-crosshairs text-[#20B2AA]"></i>',
+            // UPDATE: Logo diperkecil, tanpa animasi, tanpa pembungkus div
+            iconHtml: '<i class="fa-solid fa-location-dot text-[#20B2AA]"></i>',
+            showCloseButton: true,
             showCancelButton: false,
             confirmButtonColor: '#20B2AA',
             confirmButtonText: 'IZINKAN AKSES',
@@ -198,11 +186,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 initLocationTracking();
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Akses Ditutup',
+                    text: 'Presensi memerlukan izin lokasi. Silakan refresh halaman jika ingin mencoba lagi.',
+                    confirmButtonColor: '#20B2AA'
+                });
             }
         });
     @endif
 });
 
+// Sisa fungsi JS Anda (getDistance, initLocationTracking, dll) tetap sama
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
     const dLat = (lat2 - lat1) * Math.PI / 180;
