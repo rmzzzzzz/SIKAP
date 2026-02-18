@@ -27,5 +27,10 @@ class Laporan extends Model
     {
         return $this->belongsTo(Opd::class, 'opd_id', 'id_opd');
     }
+    public function dokumentasi()
+    {
+        return $this->hasMany(Dokumentasi::class, 'laporan_id', 'id_laporan');
+    }   
 }
+
 

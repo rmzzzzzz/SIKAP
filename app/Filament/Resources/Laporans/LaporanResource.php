@@ -24,7 +24,7 @@ class LaporanResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'laporan';
+    protected static ?string $recordTitleAttribute = 'status_persetujuan';
     protected static string|UnitEnum|null $navigationGroup = 'Monitoring';
     protected static ?string $navigationLabel = 'Laporan';
 
@@ -56,7 +56,9 @@ class LaporanResource extends Resource
     }
      public static function getEloquentQuery(): Builder
     {
+        
         $query = parent::getEloquentQuery();
+        
         $user = Auth::user();
 
       

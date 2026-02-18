@@ -15,20 +15,24 @@ class PegawaisTable
         return $table
             ->columns([
                 TextColumn::make('opd.nama_opd')
+                    ->label('NAMA OPD')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('nama')
+                    ->label('Nama Pegawai')
                     ->searchable(),
                 TextColumn::make('nip')
+                    ->label('NIP')
                     ->searchable(),
                 TextColumn::make('jabatan')
                     ->searchable(),
-                TextColumn::make('unit_kerja')
-                    ->searchable(),
+                // TextColumn::make('unit_kerja')
+                //     ->searchable(),
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
                 TextColumn::make('telp')
+                    ->label('Telepon')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

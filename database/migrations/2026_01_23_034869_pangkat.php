@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('pegawai', function (Blueprint $table) {
-            //
+        Schema::create('pangkat', function (Blueprint $table) {
+            $table->id('id_pangkat');
+            $table->string('nama_pangkat', 100)->nullable();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pegawai', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

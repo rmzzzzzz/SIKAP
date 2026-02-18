@@ -21,8 +21,9 @@ class KegiatanController extends Controller
         Carbon::setLocale('id');
 
         $kegiatan = Kegiatan::where('akses_kegiatan', 'lintas opd')
-            ->whereDate('tanggal', Carbon::today())   // ✅ pakai tanggal
-            ->orderBy('waktu_mulai', 'asc')            // ✅ urut jam mulai
+
+            ->whereDate('tanggal', Carbon::today())   
+            ->orderBy('waktu_mulai', 'asc')            
             ->get();
 
         return view('welcome', compact('kegiatan'));
@@ -38,9 +39,11 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::with('opd')
             ->whereDate('tanggal', Carbon::today())
             ->orderBy('waktu_mulai', 'asc')            // ✅ urut jam mulai
+
             ->get();
 
         $list_opd = Opd::orderBy('nama_opd', 'asc')->get();
+        //memanggil 'agenda-opd'
 
         return view('agenda-opd', compact('kegiatan', 'list_opd'));
     }

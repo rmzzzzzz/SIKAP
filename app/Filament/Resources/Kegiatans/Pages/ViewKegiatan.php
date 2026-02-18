@@ -8,6 +8,7 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
+use App\Filament\Resources\Kegiatans\Widgets\KehadiranTable;
 
 use App\Models\Pegawai;
 use App\Models\Kehadiran;
@@ -19,7 +20,7 @@ class ViewKegiatan extends ViewRecord
 {
     protected static string $resource = KegiatanResource::class;
 
-    
+
 
     public function infolist(Schema $schema): Schema
     {
@@ -27,7 +28,7 @@ class ViewKegiatan extends ViewRecord
 
         return $schema->schema([
             Section::make('Detail Kegiatan')
-                ->columns(5)
+                ->columns(10)
                 ->columnSpan('full')
                 ->schema([
                     TextEntry::make('nama_kegiatan')
@@ -36,13 +37,27 @@ class ViewKegiatan extends ViewRecord
 
                     TextEntry::make('opd.nama_opd')
                         ->label('OPD Penyelenggara'),
+                    TextEntry::make('pegawai.nama')
+                        ->label('PIC'),
 
-                    TextEntry::make('waktu')
-                        ->dateTime('d M Y, H:i'),
+                    TextEntry::make('tanggal')
+                        ->dateTime('d M Y'),
+
+                    TextEntry::make('waktu_mulai')
+                        ->label('Waktu Mulai')
+                        ->dateTime('H:i'),
+                    TextEntry::make('waktu_selesai')
+                        ->label('Waktu Selesai')    
+                        ->dateTime('H:i'),
 
                     TextEntry::make('lokasi'),
+                    TextEntry::make('latitude')
+                        ->numeric(),
+                    TextEntry::make('longitude')
+                        ->numeric(),
 
                     TextEntry::make('akses_kegiatan')
+                        ->label('Jenis Kegiatan')
                         ->badge()
                         ->color(fn(string $state) => match ($state) {
                             'satu opd'    => 'success',
@@ -55,6 +70,7 @@ class ViewKegiatan extends ViewRecord
                             default       => ucfirst(str_replace('_', ' ', $state)),
                         }),
                 ]),
+
 
             Section::make('Daftar Wajib Hadir (Pegawai Internal)')
                 ->visible(fn() => $kegiatan->akses_kegiatan === 'satu opd')
@@ -86,5 +102,5 @@ class ViewKegiatan extends ViewRecord
                         }),
                 ]),
         ]);
-    }
+}
 }

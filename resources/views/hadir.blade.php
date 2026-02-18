@@ -253,7 +253,7 @@ function renderForm(type){
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-gray-600 mb-1.5 block uppercase">NIP</label>
-                    <input id="nipInput" name="nip" class="w-full text-sm rounded-lg border bg-white" placeholder="Otomatis" oninput="handleNipInput(this.value)" required list="listNip">
+                    <input id="nipInput" name="nip" class="w-full text-sm rounded-lg border bg-white" placeholder="Isi Nama" oninput="handleNipInput(this.value)" required list="listNip">
                     <datalist id="listNip"></datalist>
                 </div>
                 <input type="hidden" name="pegawai_id" id="pegawaiId">

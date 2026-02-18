@@ -37,6 +37,10 @@ class Kegiatan extends Model
     {
         return $this->hasMany(Kehadiran::class, 'kegiatan_id', 'id_kegiatan');
     }
+    public function laporan()
+{
+    return $this->hasMany(Laporan::class, 'id_kegiatan', 'id_kegiatan');
+}
    public function pegawaiWajib()
 {
     return $this->belongsToMany(
@@ -46,5 +50,14 @@ class Kegiatan extends Model
         'pegawai_id'
     );
 }
+public function pimpinan()
+{
+    return $this->pegawai
+        ->map->user          // ambil user dari tiap pegawai
+        ->filter()           // buang null
+        ->firstWhere('role', 'pimpinan');
+}
+
+
 
 }

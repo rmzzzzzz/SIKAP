@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Kegiatan;
 use Carbon\Carbon;
 
-class KegiatanChart extends ChartWidget
+class KehadiranChart extends ChartWidget
 {
-  protected ?string $heading = 'Kegiatan per Bulan';
+  protected ?string $heading = 'Kehadiran per Bulan';
 
     protected function getData(): array
     {
         $user  = Auth::user();
         $opdId = $user->pegawai?->opd_id;
 
-        $query = Kegiatan::query();
+        $query = Kegiatan::query()->where('buat_kehadiran', '1');
 
         if (in_array($user->role, ['operator', 'pimpinan'])) {
             $query->where('opd_id', $opdId);
@@ -40,7 +40,7 @@ class KegiatanChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Kegiatan',
+                    'label' => 'Kehadiran',
                     'data' => $values,
                 ],
             ],

@@ -15,6 +15,7 @@ return new class extends Migration
         $table->id('id_opd');
         $table->string('nama_opd', 150);
         $table->string('alamat', 255);
+        $table->string('telp', 20);
         $table->string('email', 100);
         $table->string('website', 100);
         $table->timestamps();

@@ -16,7 +16,10 @@ use Filament\Forms\Components\ViewField;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\ImageEntry;
+use App\Filament\Resources\Laporans\Widgets\KehadiranTable;
+use App\Filament\Resources\Laporans\Widgets\DokumentasiTable;
 
 class ViewLaporan extends ViewRecord
 {
@@ -32,7 +35,7 @@ class ViewLaporan extends ViewRecord
                     TextEntry::make('kegiatan.nama_kegiatan')
                         ->label('Nama Kegiatan'),
 
-                    TextEntry::make('kegiatan.waktu')
+                    TextEntry::make('kegiatan.tanggal')
                         ->label('Tanggal')
                         ->date(),
 
@@ -51,14 +54,22 @@ class ViewLaporan extends ViewRecord
                         ->dateTime('d M Y')
                         ->visible(fn($record) => $record->waktu_persetujuan),
                
-                    // ImageEntry::make('ttd_pimpinan')
-                    //     ->label(false)
-                    //     ->height(120)
-                    //     ->visible(fn($record) => $record->ttd_pimpinan),
                 ]),
+                  
         ]);
     }
 
+protected function getFooterWidgets(): array
+{
+    return [
+        KehadiranTable::make([
+            'kegiatanId' => $this->record->kegiatan_id,
+        ]),
+        DokumentasiTable::make([
+            'laporanId' => $this->record->id_laporan,
+        ]),
+    ];
+}
 
     protected function getHeaderActions(): array
     {

@@ -24,7 +24,11 @@
         box-shadow: 0 4px 20px rgba(32, 178, 170, 0.08); 
     }
 
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        table-layout: fixed; 
+    }
 
     /* Header Styling */
     thead { 
@@ -37,20 +41,22 @@
         font-size: 0.75rem; 
         letter-spacing: 0.08em; 
         font-weight: 800;
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: left;
+        border-right: 1px solid rgba(255, 255, 255, 0.3);
+        text-align: center;
+        vertical-align: middle;
     }
-    th.text-center { text-align: center; }
 
     /* Body Styling */
     td { 
         padding: 1rem; 
-        border-bottom: 1.5px solid var(--bg-mint); 
-        border-right: 1px solid var(--bg-mint); 
+        border-bottom: 1px solid var(--border-soft); 
+        border-right: 1px solid var(--border-soft); 
         font-size: 0.813rem; 
         color: var(--dark-text);
         vertical-align: middle;
         line-height: 1.5;
+        /* Membuat isi tabel Kapital di Awal Kata secara global */
+        text-transform: capitalize;
     }
     
     td:last-child, th:last-child { border-right: none; }
@@ -61,8 +67,9 @@
     .kegiatan-title { 
         color: var(--primary-teal); 
         font-weight: 700; 
-        font-size: 0.813rem; 
-        text-transform: uppercase; 
+        font-size: 0.813rem;
+        /* Diubah dari uppercase ke capitalize */
+        text-transform: capitalize; 
     }
 
     .waktu-text { 
@@ -80,16 +87,18 @@
         color: var(--secondary-teal); 
         font-weight: 500;
         opacity: 0.8;
+        text-transform: capitalize;
     }
 
     .pic-name { 
         color: var(--primary-teal); 
         font-weight: 700; 
         font-size: 0.75rem; 
-        text-transform: uppercase; 
         display: block;
         border-left: 3px solid var(--primary-teal);
         padding-left: 8px;
+        /* Diubah dari uppercase ke capitalize */
+        text-transform: capitalize;
     }
 
     /* Badge OPD */
@@ -102,6 +111,7 @@
         font-weight: 800; 
         border: 1px solid var(--border-soft);
         display: inline-block;
+        text-transform: capitalize;
     }
 
     /* List Peserta */
@@ -114,6 +124,7 @@
         border-radius: 4px;
         border: 1px solid var(--border-soft);
         margin-bottom: 2px;
+        text-transform: capitalize;
     }
 </style>
 @endpush
@@ -146,9 +157,9 @@
             <table id="table-kegiatan">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 50px;">No</th>
+                        <th style="width: 50px;">No</th>
                         <th style="width: 200px;">Kegiatan</th>
-                        <th class="text-center" style="width: 80px;">Waktu</th>
+                        <th style="width: 80px;">Waktu</th>
                         <th style="width: 180px;">Tempat</th>
                         <th style="width: 150px;">PIC</th>
                         <th style="width: 150px;">Unit Kerja</th>
@@ -158,7 +169,7 @@
                 <tbody id="kegiatan-body">
                     @forelse($kegiatan as $index => $item)
                     <tr class="kegiatan-row" data-opd="{{ $item->opd_id }}">
-                        <td class="text-center font-bold text-gray-300 iteration-count">{{ $index + 1 }}</td>
+                        <td class="text-center font-bold text-gray-400 iteration-count">{{ $index + 1 }}</td>
                         <td><div class="kegiatan-title">{{ $item->nama_kegiatan }}</div></td>
                         <td class="text-center">
                             <span class="waktu-text">{{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }}</span>
@@ -170,14 +181,14 @@
                             </div>
                         </td>
                         <td><span class="pic-name">{{ $item->pegawai->nama ?? '-' }}</span></td>
-                        <td><span class="opd-badge">{{ $item->opd->nama_opd ?? 'Umum' }}</span></td>
+                        <td class="text-center"><span class="opd-badge">{{ $item->opd->nama_opd ?? 'Umum' }}</span></td>
                         <td>
                             <div class="flex flex-col gap-1">
                                 @foreach($item->pegawaiWajib->take(3) as $peserta)
                                     <div class="participant-item truncate">{{ $peserta->nama }}</div>
                                 @endforeach
                                 @if($item->pegawaiWajib->count() > 3)
-                                    <span class="text-[9px] font-bold text-[#20B2AA] italic px-1">
+                                    <span class="text-[9px] font-bold text-[#20B2AA] italic px-1" style="text-transform: none;">
                                         +{{ $item->pegawaiWajib->count() - 3 }} lainnya
                                     </span>
                                 @endif

@@ -36,6 +36,10 @@ class DashboardStats extends StatsOverviewWidget
                 ->icon('heroicon-o-calendar-days')
                 ->color('primary'),
 
+            Stat::make('Kehadiran', (clone $kegiatan)->where('buat_kehadiran', '1')->count())
+                // ->icon('heroicon-o-user-check')
+                ->color('success'),
+
             Stat::make(
                 'Laporan Menunggu',
                 (clone $laporan)->where('status_persetujuan', 'menunggu')->count()

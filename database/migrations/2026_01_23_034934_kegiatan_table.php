@@ -25,7 +25,6 @@ return new class extends Migration
         $table->enum('akses_kegiatan',['satu opd','lintas opd']);
          $table->boolean('buat_kehadiran')->default(true);
         $table->timestamps();
-
         $table->foreign('opd_id')
             ->references('id_opd')
             ->on('opd')
@@ -35,7 +34,6 @@ return new class extends Migration
             ->on('pegawai')
             ->cascadeOnDelete();
     });
-
     }
 
     /**

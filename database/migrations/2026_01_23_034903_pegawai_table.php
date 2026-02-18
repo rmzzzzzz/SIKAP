@@ -17,8 +17,9 @@ return new class extends Migration
         $table->string('nama', 150);
         $table->string('nip', 25)->nullable();
         $table->string('jabatan', 100);
-        $table->string('unit_kerja', 100);
-        $table->string('email', 100);
+        $table->unsignedBigInteger('pangkat_id')->nullable();
+        $table->string('unit_kerja', 100)->nullable();
+        $table->string('email', 100)->nullable();
         $table->string('telp', 20);
         $table->timestamps();
 
@@ -26,6 +27,11 @@ return new class extends Migration
             ->references('id_opd')
             ->on('opd')
             ->nullOnDelete();
+        $table->foreign('pangkat_id')
+            ->references('id_pangkat')
+            ->on('pangkat')
+            ->nullOnDelete();
+
     });
     }
 

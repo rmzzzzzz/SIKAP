@@ -6,16 +6,20 @@ use App\Filament\Resources\Kehadirans\KehadiranResource;
 use App\Models\Pegawai;
 use App\Models\Kehadiran;
 use App\Models\Laporan;
+use App\Models\Dokumentasi;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\FileUpload;
+use App\Services\ImageService;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
+use App\Filament\Resources\Kehadirans\Widgets\KehadiranTable;  
 class ViewKehadiran extends ViewRecord
 {
     protected static string $resource = KehadiranResource::class;
@@ -27,6 +31,22 @@ class ViewKehadiran extends ViewRecord
                 ->icon('heroicon-o-paper-airplane')
                 ->color('primary')
 
+                ->form([
+                    FileUpload::make('foto')
+                        ->label('Dokumentasi Kegiatan')
+                        ->multiple()
+                        ->image()
+                        ->imagePreviewHeight('150')
+                        ->panelLayout('grid')
+                        ->previewable(true)
+                        ->openable()
+                        ->downloadable()
+                        ->reorderable()
+                        ->maxFiles(5)
+                        ->directory('laporan')
+                        ->disk('public')
+                        ->required()
+                ])
                 ->visible(function () {
                     $record = $this->record;
                     $user   = Auth::user();
@@ -34,7 +54,7 @@ class ViewKehadiran extends ViewRecord
                     if ($user->role !== 'operator') {
                         return false;
                     }
-                    
+
                     return ! Laporan::where(
                         'kegiatan_id',
                         $record->id_kegiatan
@@ -43,7 +63,7 @@ class ViewKehadiran extends ViewRecord
 
                 ->requiresConfirmation()
 
-                ->action(function () {
+                ->action(function (array $data) {
                     $record = $this->record;
 
                     $totalHadir = Kehadiran::where(
@@ -51,12 +71,25 @@ class ViewKehadiran extends ViewRecord
                         $record->id_kegiatan
                     )->count();
 
-                    Laporan::create([
+                    $laporan = Laporan::create([
                         'kegiatan_id' => $record->id_kegiatan,
                         'opd_id' => $record->opd_id,
                         'total_hadir' => $totalHadir,
                         'status_persetujuan' => 'menunggu',
                     ]);
+                    // simpan semua foto
+                    foreach ($data['foto'] as $file) {
+
+                        $compressedPath = ImageService::compressAndStore(
+                            storage_path('app/public/' . $file),
+                            'laporan'
+                        );
+                        Dokumentasi::create([
+                            'laporan_id' => $laporan->id_laporan,
+                            'path' => $compressedPath,
+                        ]);
+                        Storage::disk('public')->delete($file);
+                    }
 
                     Notification::make()
                         ->title('Laporan berhasil diajukan')
@@ -67,45 +100,42 @@ class ViewKehadiran extends ViewRecord
     }
     public function infolist(Schema $schema): Schema
     {
-       
+
 
         return $schema->schema([
             Section::make('Detail Kegiatan')
-                ->columns(4)
+                ->columns(8)
                 ->columnSpan('full')
                 ->schema([
                     TextEntry::make('nama_kegiatan')->label('Kegiatan'),
                     TextEntry::make('opd.nama_opd')->label('OPD'),
-                    TextEntry::make('waktu')->dateTime(),
+                    TextEntry::make('pegawai.nama')->label('PIC'),
+                    TextEntry::make('tanggal','waktu_mulai','-','waktu_selesai')->datetime(),
                     TextEntry::make('lokasi'),
-                ]),
-
-            Section::make('Daftar Kehadiran')
-            ->columnSpan('full')
-                ->schema([
-                    RepeatableEntry::make('kehadiran')
-                        ->label(false)
-                        ->columns(4)
-                        
-                        ->schema([
-                            TextEntry::make('pegawai.nama')
-                                ->label('Nama Pegawai'),
-
-                            TextEntry::make('pegawai.jabatan')
-                                ->label('Jabatan'),
-                            TextEntry::make('pegawai.opd.nama_opd')
-                                ->label('OPD'),
-
-                            TextEntry::make('status_pegawai')
-                                ->label('Status')
-                                ->badge()
-                                ->color(
-                                    fn(string $state) =>
-                                    $state === 'internal' ? 'success' : 'warning'
-                                ),
-                        ])
-                        
+                    TextEntry::make('latitude')->numeric(),
+                    TextEntry::make('longitude')->numeric(),
+                    TextEntry::make('akses_kegiatan')
+                        ->label('Jenis Kegiatan')
+                        ->badge()
+                        ->color(fn(string $state) => match ($state) {
+                            'satu opd'    => 'success',
+                            'lintas opd'  => 'info',
+                            default       => 'gray',
+                        })
+                        ->formatStateUsing(fn(string $state) => match ($state) {
+                            'satu opd'    => 'Internal',
+                            'lintas opd'  => 'Eksternal',
+                            default       => ucfirst(str_replace('_', ' ', $state)),
+                        }),
                 ]),
         ]);
     }
+protected function getFooterWidgets(): array
+{
+    return [
+        KehadiranTable::make([
+            'kegiatanId' => $this->record->id_kegiatan,
+        ]),
+    ];
+}  
 }

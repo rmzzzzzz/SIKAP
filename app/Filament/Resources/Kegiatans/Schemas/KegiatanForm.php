@@ -6,11 +6,12 @@ use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Toggle;
 use App\Models\Pegawai;
+use Filament\Forms\Components\TimePicker;
 
 class KegiatanForm
 {
@@ -30,6 +31,13 @@ class KegiatanForm
                 ->live()
                 ->dehydrated(true)
                 ->required(),
+            Select::make('akses_kegiatan')
+                ->label('Jenis Kegiatan')
+                ->options([
+                    'satu opd'   => 'Internal',
+                    'lintas opd' => 'Eksternal',
+                ])
+                ->required(),
             Select::make('pic')
                 ->label('Penanggung Jawab (PIC)')
                 ->relationship(
@@ -46,17 +54,19 @@ class KegiatanForm
                 ->preload()
                 ->reactive()
                 ->required(),
-            Select::make('akses_kegiatan')
-                ->label('Akses Kegiatan')
-                ->options([
-                    'satu opd'   => 'Internal',
-                    'lintas opd' => 'eksternal',
-                ])
+
+
+            DatePicker::make('tanggal')
+                ->label('Tanggal')
                 ->required(),
 
-            DateTimePicker::make('waktu')
-                ->label('Waktu Kegiatan')
+            TimePicker::make('waktu_mulai')
+                ->label('Waktu Mulai')
                 ->required(),
+            TimePicker::make('waktu_selesai')
+                ->label('Waktu Selesai')
+                ->required(),
+
 
             TextInput::make('lokasi')
                 ->label('Lokasi')
@@ -80,11 +90,11 @@ class KegiatanForm
                 ->options(function (callable $get) {
 
                     $akses = $get('akses_kegiatan');
-                    
+
                     if ($akses !== 'satu opd') {
                         return [];
-                        }
-                        
+                    }
+
                     $opdId = $get('opd_id');
                     return Pegawai::where('opd_id', $opdId)
                         ->pluck('nama', 'id_pegawai');
@@ -100,12 +110,11 @@ class KegiatanForm
             Toggle::make('buat_kehadiran')
                 ->label('Gunakan Kehadiran')
                 ->helperText('Aktifkan jika kegiatan memerlukan pencatatan kehadiran')
-                ->default(true)
+                ->default(false)
                 ->dehydrated(true)
                 ->dehydrateStateUsing(fn($state) => $state ? 1 : 0)
                 ->required(),
-                
+
         ]);
-         
     }
 }

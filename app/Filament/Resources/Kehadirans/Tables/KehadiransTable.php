@@ -16,11 +16,13 @@ class KehadiransTable
     {
         
         return $table
-        ->defaultSort('waktu', 'desc')
+        ->defaultSort('tanggal', 'desc')
               ->columns([
             TextColumn::make('nama_kegiatan')->label('Kegiatan'),
             TextColumn::make('opd.nama_opd')->label('OPD'),
-            TextColumn::make('waktu')->dateTime(),
+            TextColumn::make('pegawai.nama')->label('PIC'),
+            TextColumn::make('lokasi'),
+            TextColumn::make('tanggal')->date(),
             TextColumn::make('total_hadir')
                 ->label('Hadir')
                 ->badge()

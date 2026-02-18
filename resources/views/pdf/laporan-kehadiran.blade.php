@@ -116,7 +116,7 @@
                 <div class="instansi">PEMERINTAH KABUPATEN SUMENEP</div>
                 <div class="nama">{{ strtoupper($laporan->kegiatan->opd->nama_opd) }}</div>
                 <div>
-                    {{ $laporan->kegiatan->opd->alamat }}<br>
+                    {{ $laporan->kegiatan->opd->alamat }} | Telepon: {{ $laporan->kegiatan->opd->telp }}<br>
                     Email: {{ $laporan->kegiatan->opd->email }} | Website: {{ $laporan->kegiatan->opd->website }}
                 </div>
             </td>
@@ -131,73 +131,129 @@
 <div class="info">
     <table>
         <tr>
-            <td width="25%">Rincian Kegiatan</td>
-            <td width="2%">:</td>
-            <td>{{ $laporan->kegiatan->nama_kegiatan }}</td>
-        </tr>
-        <tr>
             <td>Hari / Tanggal</td>
             <td>:</td>
-            <td>{{ \Carbon\Carbon::parse($laporan->kegiatan->waktu)->translatedFormat('l / d F Y') }}</td>
+            <td>{{ \Carbon\Carbon::parse($laporan->kegiatan->tanggal)->translatedFormat('l / d F Y') }}</td>
         </tr>
+        tr>
+            <td>Waktu</td>
+            <td>:</td>
+            <td>{{ \Carbon\Carbon::parse($laporan->kegiatan->waktu_mulai)->translatedFormat('H:i') }} - {{ \Carbon\Carbon::parse($laporan->kegiatan->waktu_selesai)->translatedFormat('H:i') }} WIB</td>
         <tr>
             <td>Tempat</td>
             <td>:</td>
             <td>{{ $laporan->kegiatan->lokasi }}</td>
         </tr>
+        <tr>
+            <td width="25%">Acara</td>
+            <td width="2%">:</td>
+            <td>{{ $laporan->kegiatan->nama_kegiatan }}</td>
+        </tr>
     </table>
 </div>
 
 {{-- TABEL ABSENSI --}}
-<table class="absen">
-    <thead>
-        <tr>
-           <th width="5%">NO</th>
-        <th width="25%">NAMA</th>
+@php
+    $chunks = $laporan->kegiatan->kehadiran->chunk(20);
+@endphp
 
-        @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
-            <th width="25%">OPD</th>
-        @endif
+@foreach ($chunks as $chunkIndex => $chunk)
+    
+    @if ($chunkIndex > 0)
+        <div style="page-break-before: always;"></div>
+    @endif
 
-        <th width="20%">JABATAN</th>
-        <th width="15%">NO. TELP</th>
-        <th width="10%">TANDA TANGAN</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($laporan->kegiatan->kehadiran as $i => $h)
-        <tr>
-            <td>{{ $i + 1 }}</td>
-            <td class="nama">{{ $h->pegawai->nama }}</td>
-              @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
-            <td>
-                {{ $h->pegawai->opd->nama_opd ?? '-' }}
-            </td>
-        @endif
-            <td class="jabatan">{{ $h->pegawai->jabatan }}</td>
-             <td>
-            {{ $h->pegawai->telp ?? '-' }}
-        </td>
-            <td >{{ $h->tanda_tangan }}</td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+    <table class="absen">
+        <thead>
+            <tr>
+                <th width="5%">NO</th>
+                <th width="25%">NAMA</th>
+
+                @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
+                    <th width="20%">OPD</th>
+                @endif
+
+                <th width="20%">JABATAN</th>
+                <th width="15%">NO. TELP</th>
+                <th width="15%">TANDA TANGAN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($chunk as $i => $h)
+                <tr>
+                    <td>{{ ($chunkIndex * 20) + $i + 1 }}</td>
+                    <td class="nama">{{ $h->pegawai->nama }}</td>
+
+                    @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
+                        <td>{{ $h->pegawai->opd->nama_opd ?? $h->pegawai->unit_kerja ?? '-' }}</td>
+                    @endif
+
+                    <td>{{ $h->pegawai->jabatan }}</td>
+                    <td>{{ $h->pegawai->telp ?? '-' }}</td>
+                    <td>{{ ($chunkIndex * 20) + $i + 1 }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+@endforeach
+
 
 {{-- TANDA TANGAN PIMPINAN --}}
 <div class="ttd">
     <div class="ttd-kanan">
         <div>Sumenep, {{ now()->translatedFormat('d F Y') }}</div>
-        <div>Pimpinan OPD</div>
+        <div>Kepala</div>
 
-        <img src="{{ $laporan->ttd_pimpinan }}">
-
-        <div style="margin-top:5px;font-weight:bold;">
+        <img class="" src="{{ $laporan->ttd_pimpinan }}">
+        
+        <div>{{ $pimpinan->name ?? '-' }}</div>
+        <div>{{ $pimpinan->pegawai->jabatan ?? '-' }}</div>
+        <div>NIP: {{ $pimpinan->pegawai->nip ?? '-' }}</div>
+        {{-- <div style="margin-top:5px;font-weight:bold;">
             {{ $laporan->kegiatan->opd->nama_opd }}
-        </div>
+        </div> --}}
     </div>
     <div class="clear"></div>
 </div>
+@if ($laporan->dokumentasi->count())
+
+    @php
+        $fotoChunks = $laporan->dokumentasi->chunk(4);
+    @endphp
+
+    @foreach ($fotoChunks as $index => $chunk)
+
+        <div style="page-break-before: always;"></div>
+
+        <div style="margin-top:20px;">
+            <strong>DOKUMENTASI KEGIATAN</strong>
+            <br><br>
+
+            <table width="100%" cellpadding="5">
+                @foreach ($chunk->chunk(2) as $row)
+                    <tr>
+                        @foreach ($row as $foto)
+                            <td width="50%" align="center">
+                                <img 
+                                    src="{{ public_path('storage/' . $foto->path) }}"
+                                    style="width:100%; max-height:250px;"
+                                >
+                            </td>
+                        @endforeach
+
+                        @if ($row->count() == 1)
+                            <td width="50%"></td>
+                        @endif
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+
+    @endforeach
+
+@endif
+
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\Pegawais\Schemas;
+
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -13,24 +14,30 @@ class PegawaiForm
         return $schema
             ->components([
                 Select::make('opd_id')
-                ->label('Opd')
+                    ->label('Opd')
                     ->relationship('opd', 'nama_opd')
-                    ->default(fn () => Auth::user()->opd_id)
+                    ->default(fn() => Auth::user()->opd_id)
                     ->searchable(),
                 TextInput::make('nama')
                     ->required(),
                 TextInput::make('nip'),
                 TextInput::make('jabatan')
                     ->required(),
-                TextInput::make('unit_kerja')
-                    ->required(),
+                Select::make('pangkat_id')
+                    ->label('Pangkat')
+                    ->relationship('pangkat', 'nama_pangkat')
+                    ->searchable()
+                    ->helperText('Opsional, jika pegawai memiliki pangkat')
+                    ->nullable(),
+
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
                     ->required(),
                 TextInput::make('telp')
                     ->tel()
-                    ->required(),
+                    ->required()
+                    ->helperText('Masukkan nomor telepon dengan format yang benar, misalnya: 081234567890'),
             ]);
     }
 }

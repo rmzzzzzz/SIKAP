@@ -20,13 +20,13 @@ class Pegawai extends Model
     {
         return $this->hasMany(Kehadiran::class, 'pegawai_id', 'id_pegawai');
     }
-     public function user()
+    public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'pegawai_id', 'id_pegawai');
     }
     public function kegiatanWajib()
-{
-    return $this->belongsToMany(
+    {
+        return $this->belongsToMany(
             Kegiatan::class,
             'kegiatan_pegawai',
             'pegawai_id',
@@ -34,6 +34,9 @@ class Pegawai extends Model
             'id_pegawai',
             'id_kegiatan'
         );
-}
-
+    }
+    public function pangkat()
+    {
+        return $this->belongsTo(pangkat::class, 'pangkat_id', 'id_pangkat');
+    }
 }
