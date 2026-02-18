@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Models\Kegiatan;
 use App\Models\Pegawai;
 use App\Models\Kehadiran;
-use App\Models\Opd; // Pastikan Model OPD sudah ada
+use App\Models\Opd;
 
 class KegiatanController extends Controller
 {
@@ -21,31 +21,27 @@ class KegiatanController extends Controller
         Carbon::setLocale('id');
 
         $kegiatan = Kegiatan::where('akses_kegiatan', 'lintas opd')
-            ->whereDate('waktu', Carbon::today())
-            ->orderBy('waktu', 'asc')
+            ->whereDate('tanggal', Carbon::today())   // ✅ pakai tanggal
+            ->orderBy('waktu_mulai', 'asc')            // ✅ urut jam mulai
             ->get();
 
         return view('welcome', compact('kegiatan'));
     }
 
     /**
-     * BARU: Halaman Agenda Per OPD
-     * Mengarah langsung ke file resources/views/agenda-opd.blade.php
+     * Halaman Agenda Per OPD
      */
     public function agendaOpd()
     {
         Carbon::setLocale('id');
 
-        // Mengambil semua kegiatan hari ini beserta data OPD-nya
         $kegiatan = Kegiatan::with('opd')
-            ->whereDate('waktu', Carbon::today())
-            ->orderBy('waktu', 'asc')
+            ->whereDate('tanggal', Carbon::today())
+            ->orderBy('waktu_mulai', 'asc')            // ✅ urut jam mulai
             ->get();
 
-        // Mengambil daftar OPD untuk dropdown filter
         $list_opd = Opd::orderBy('nama_opd', 'asc')->get();
 
-        // DISESUAIKAN: memanggil 'agenda-opd' bukan 'kegiatan.index'
         return view('agenda-opd', compact('kegiatan', 'list_opd'));
     }
 
@@ -94,8 +90,8 @@ class KegiatanController extends Controller
             }
 
             $cekDuplikasi = Kehadiran::where('pegawai_id', $pegawaiId)
-                                     ->where('kegiatan_id', $id)
-                                     ->first();
+                ->where('kegiatan_id', $id)
+                ->first();
 
             if ($cekDuplikasi) {
                 return back()->with('error', 'Anda sudah mengisi presensi untuk kegiatan ini sebelumnya.');

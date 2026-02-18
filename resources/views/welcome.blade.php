@@ -1,81 +1,161 @@
 @extends('layouts.app')
 
-@section('title', 'Beranda - SIKAP SUMENEP')
-
 @section('content')
+
+{{-- CARD BESAR --}}
+<div class="bg-white border-2 border-[#20B2AA]/20 rounded-[2rem] p-5 md:p-6 max-w-6xl mx-auto shadow-md">
+
     {{-- SEARCH --}}
-    <div class="relative mb-12 group">
-        <i class="fa-solid fa-search absolute left-6 top-1/2 -translate-y-1/2 text-[#2F5F5E] text-xl"></i>
-        <input type="text" id="searchInput" placeholder="Cari agenda kegiatan hari ini..."
-               class="w-full bg-white border border-[#D6D1C4] rounded-3xl py-6 pl-16 pr-6 text-xl focus:border-[#2F5F5E] outline-none transition-all shadow-xl placeholder:text-gray-400">
+    <div class="relative mb-6 group">
+        <i class="fa-solid fa-search absolute left-5 top-1/2 -translate-y-1/2 text-[#20B2AA] text-base transition-colors"></i>
+        <input type="text" id="searchInput" placeholder="Cari agenda kegiatan..."
+            class="w-full bg-[#f0f9f8] border-2 border-[#20B2AA]/10 rounded-2xl py-3 pl-12 pr-5 text-base
+                   focus:border-[#20B2AA] focus:bg-white outline-none transition-all shadow-none font-medium text-[#1a9690]">
     </div>
 
-    <div class="flex items-center gap-4 mb-8">
-        <div class="h-[2px] w-12 bg-[#D6D1C4]"></div>
-        <h2 class="text-sm font-black uppercase tracking-[0.3em] text-[#2F5F5E]">Agenda Terkini</h2>
+    {{-- JUDUL --}}
+    <div class="flex items-center gap-2 mb-5">
+        <div class="h-[2px] w-8 bg-[#20B2AA] rounded-full"></div>
+        <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-[#20B2AA]">
+            Agenda Terkini
+        </h2>
     </div>
 
-    <div id="kegiatanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    @forelse($kegiatan as $item)
-    <div class="kegiatan-card bg-white rounded-[2.5rem] overflow-hidden flex flex-col shadow-lg border border-[#D6D1C4]/30 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-        <div class="p-8">
-            <div class="flex items-center gap-5 mb-8">
-                <div class="bg-[#2F5F5E] w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-lg shrink-0 text-white">
-                    {{ $loop->iteration }}
+    {{-- GRID KEGIATAN --}}
+    <div id="kegiatanContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        @forelse($kegiatan as $item)
+            @php
+                $waktuSelesai = \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai);
+                $isExpired = \Carbon\Carbon::now()->greaterThan($waktuSelesai);
+            @endphp
+
+        {{-- KEGIATAN CARD --}}
+        <div class="kegiatan-card bg-white rounded-[1.5rem] overflow-hidden flex flex-col
+                    border-2 border-[#20B2AA]/10 hover:border-[#20B2AA] transition-all duration-300 group shadow-sm">
+
+            <div class="p-5">
+
+                {{-- HEADER CARD --}}
+                <div class="flex items-start gap-3 mb-4">
+                    <div class="bg-[#20B2AA] w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center
+                                font-black text-sm text-white transition-transform group-hover:scale-105 shadow-md shadow-[#20B2AA]/20">
+                        {{ $loop->iteration }}
+                    </div>
+
+                    <div class="flex-1">
+                        <h3 class="nama-kegiatan font-extrabold text-sm uppercase text-[#20B2AA] leading-tight line-clamp-2">
+                            {{ $item->nama_kegiatan }}
+                        </h3>
+                    </div>
                 </div>
-                <h3 class="nama-kegiatan font-extrabold text-lg leading-tight uppercase tracking-tight text-[#2F5F5E]">
-                    {{ $item->nama_kegiatan }}
-                </h3>
+
+                {{-- INFO LIST (3 LIST) --}}
+                <div class="space-y-2">
+                    {{-- 1. TANGGAL & WAKTU --}}
+                    <div class="flex items-center gap-3 bg-[#f0f9f8] border border-[#20B2AA]/10 p-3 rounded-xl">
+                        <div class="w-8 h-8 bg-white border border-[#20B2AA]/10 rounded-lg flex-shrink-0 flex items-center justify-center text-[#20B2AA]">
+                            <i class="fa-regular fa-calendar-check text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-[#1a9690]">
+                                {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+                            </p>
+                            <p class="text-[9px] font-bold text-[#20B2AA] opacity-70 text-nowrap">
+                                {{ substr($item->waktu_mulai,0,5) }} - {{ substr($item->waktu_selesai,0,5) }} WIB
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- 2. PIC --}}
+                    <div class="flex items-center gap-3 bg-[#f0f9f8] border border-[#20B2AA]/10 p-3 rounded-xl">
+                        <div class="w-8 h-8 bg-white border border-[#20B2AA]/10 rounded-lg flex-shrink-0 flex items-center justify-center text-[#20B2AA]">
+                            <i class="fa-solid fa-user-tie text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-[9px] font-black text-[#20B2AA]/50 uppercase tracking-tighter">Penanggung Jawab</p>
+                            <p class="text-[11px] font-bold text-[#1a9690] line-clamp-1">
+                                {{ $item->pegawai->nama ?? '-' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- 3. LOKASI --}}
+                    <div class="flex items-center gap-3 bg-[#f0f9f8] border border-[#20B2AA]/10 p-3 rounded-xl">
+                        <div class="w-8 h-8 bg-white border border-[#20B2AA]/10 rounded-lg flex-shrink-0 flex items-center justify-center text-[#20B2AA]">
+                            <i class="fa-solid fa-location-dot text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                             <p class="text-[9px] font-black text-[#20B2AA]/50 uppercase tracking-tighter">Lokasi</p>
+                            <p class="text-[11px] font-bold text-[#1a9690] line-clamp-1">
+                                {{ $item->lokasi }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="flex items-center gap-5 bg-[#F0EFE9] p-5 rounded-[1.5rem] border border-[#D6D1C4]/50">
-                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#2F5F5E]">
-                        <i class="fa-regular fa-clock text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Waktu</p>
-                        <p class="text-sm font-bold text-[#2F5F5E]">{{ date('H:i', strtotime($item->waktu)) }} WIB</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-5 bg-[#F0EFE9] p-5 rounded-[1.5rem] border border-[#D6D1C4]/50">
-                    <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-sm text-[#2F5F5E]">
-                        <i class="fa-solid fa-location-dot text-xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Lokasi</p>
-                        <p class="text-sm font-bold text-[#2F5F5E] line-clamp-1">{{ $item->lokasi }}</p>
-                    </div>
-                </div>
+            {{-- BUTTON --}}
+            <div class="px-5 pb-5 mt-auto">
+                @if($isExpired)
+                    {{-- Tampilan Tombol Selesai (Sama dengan tombol aktif namun memicu alert) --}}
+                    <button type="button" onclick="showExpiredAlert()"
+                        class="w-full bg-[#f0f9f8] border-2 border-[#20B2AA] text-[#20B2AA] hover:bg-[#20B2AA] hover:text-white
+                               text-center py-2.5 rounded-xl font-black text-[10px] tracking-[0.15em] uppercase 
+                               flex justify-center gap-2 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-[#20B2AA]/20">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        SESI BERAKHIR
+                    </button>
+                @else
+                    <a href="{{ url('/hadir/'.$item->id_kegiatan) }}"
+                        class="bg-[#f0f9f8] border-2 border-[#20B2AA] text-[#20B2AA] hover:bg-[#20B2AA] hover:text-white
+                               text-center py-2.5 rounded-xl font-black text-[10px] tracking-[0.15em] uppercase 
+                               flex justify-center gap-2 transition-all duration-300 active:scale-95 shadow-sm hover:shadow-[#20B2AA]/20">
+                        <i class="fa-solid fa-signature"></i>
+                        DAFTAR HADIR
+                    </a>
+                @endif
             </div>
         </div>
 
-        <div class="px-8 pb-8 mt-auto">
-            <a href="{{ url('/hadir/'.$item->id_kegiatan) }}" 
-               class="bg-gradient-to-r from-[#2F5F5E] to-[#5B4636] hover:brightness-110 text-white text-center py-5 rounded-2xl font-black text-xs tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 shadow-lg shadow-[#2F5F5E]/20">
-                <i class="fa-solid fa-signature text-lg"></i> ISI DAFTAR HADIR
-            </a>
+        @empty
+        <div class="col-span-full text-center py-10">
+            <p class="font-bold text-[#1a9690]/30 text-xs tracking-widest uppercase">Kosong</p>
         </div>
+        @endforelse
     </div>
-    @empty
-        <div class="col-span-full text-center py-20 opacity-50">
-            <i class="fa-solid fa-calendar-xmark text-6xl mb-4 text-[#2F5F5E]"></i>
-            <p class="font-bold text-[#2F5F5E]">Belum ada agenda lintas OPD untuk hari ini.</p>
-        </div>
-    @endforelse
 </div>
-@endsection
 
-@push('scripts')
+{{-- SCRIPTS --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function showExpiredAlert() {
+        Swal.fire({
+            title: 'SESI BERAKHIR',
+            text: 'Maaf, waktu pengisian daftar hadir untuk kegiatan ini sudah ditutup.',
+            icon: 'error',
+            confirmButtonColor: '#20B2AA',
+            confirmButtonText: 'MENGERTI',
+            customClass: {
+                popup: 'rounded-[1.5rem]',
+                confirmButton: 'rounded-xl font-bold tracking-widest text-[10px] py-3 px-8'
+            }
+        });
+    }
+
     document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
+        let searchTerm = this.value.toLowerCase();
         let cards = document.querySelectorAll('.kegiatan-card');
+        
         cards.forEach(card => {
             let title = card.querySelector('.nama-kegiatan').innerText.toLowerCase();
-            card.style.display = title.includes(filter) ? "" : "none";
+            if(title.includes(searchTerm)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
         });
     });
 </script>
-@endpush
+
+@endsection
