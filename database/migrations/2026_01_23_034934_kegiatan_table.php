@@ -16,7 +16,9 @@ return new class extends Migration
         $table->unsignedBigInteger('opd_id');
         $table->string('nama_kegiatan', 200);
         $table->unsignedBigInteger('pic');
-        $table->dateTime('waktu');
+        $table->date('tanggal');
+        $table->time('waktu_mulai');
+        $table->time('waktu_selesai');
         $table->string('lokasi', 255);
         $table->decimal('latitude', 10, 7);
         $table->decimal('longitude', 10, 7);

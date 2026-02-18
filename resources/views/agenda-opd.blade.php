@@ -4,36 +4,40 @@
 
 @push('styles')
 <style>
-    /* Import Font Modern jika belum ada di layout utama */
+    /* Import Font Modern */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     :root {
-        --primary-teal: #2F5F5E;
-        --text-brown: #5B4636;
-        --border-color: #EDEBE4;
-        --bg-light: #FDFDFB;
+        --primary-teal: #20B2AA; /* Light Sea Green */
+        --secondary-teal: #1a9690; /* Teal Gelap */
+        --bg-mint: #F0F9F8; /* Mint White */
+        --dark-text: #374151;
+        --border-soft: #B2E2E0; /* Warna border teal muda pucat */
     }
 
     .table-container { 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: 'Inter', sans-serif;
         background: white; 
         border-radius: 1.25rem; 
         overflow: hidden; 
-        border: 2px solid #D6D1C4; 
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+        border: 2px solid var(--primary-teal); 
+        box-shadow: 0 4px 20px rgba(32, 178, 170, 0.08); 
     }
 
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 
     /* Header Styling */
-    thead { background: var(--primary-teal); color: white; }
+    thead { 
+        background: var(--primary-teal); 
+        color: #ffffff; 
+    }
     th { 
-        padding: 1rem; 
+        padding: 1.1rem 1rem; 
         text-transform: uppercase; 
         font-size: 0.75rem; 
-        letter-spacing: 0.05em; 
-        font-weight: 700;
-        border-right: 1px solid rgba(255, 255, 255, 0.15);
+        letter-spacing: 0.08em; 
+        font-weight: 800;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
         text-align: left;
     }
     th.text-center { text-align: center; }
@@ -41,20 +45,19 @@
     /* Body Styling */
     td { 
         padding: 1rem; 
-        border-bottom: 1.5px solid var(--border-color); 
-        border-right: 1px solid var(--border-color); 
-        font-size: 0.813rem; /* Ukuran font standar (13px) */
-        color: #374151;
+        border-bottom: 1.5px solid var(--bg-mint); 
+        border-right: 1px solid var(--bg-mint); 
+        font-size: 0.813rem; 
+        color: var(--dark-text);
         vertical-align: middle;
         line-height: 1.5;
-        word-wrap: break-word;
     }
     
     td:last-child, th:last-child { border-right: none; }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background-color: var(--bg-light); }
+    tr:hover td { background-color: var(--bg-mint); } 
 
-    /* Penyeragaman Ukuran Teks Spesifik */
+    /* Text Styling */
     .kegiatan-title { 
         color: var(--primary-teal); 
         font-weight: 700; 
@@ -63,15 +66,20 @@
     }
 
     .waktu-text { 
-        font-weight: 700; 
-        color: var(--text-brown); 
+        font-weight: 800; 
+        color: var(--primary-teal); 
         font-size: 0.813rem; 
+        background: var(--bg-mint);
+        padding: 3px 8px;
+        border-radius: 5px;
+        border: 1px solid var(--border-soft);
     }
 
     .lokasi-text { 
         font-size: 0.75rem; 
-        color: #6B7280; 
+        color: var(--secondary-teal); 
         font-weight: 500;
+        opacity: 0.8;
     }
 
     .pic-name { 
@@ -79,28 +87,32 @@
         font-weight: 700; 
         font-size: 0.75rem; 
         text-transform: uppercase; 
+        display: block;
+        border-left: 3px solid var(--primary-teal);
+        padding-left: 8px;
     }
 
+    /* Badge OPD */
     .opd-badge { 
-        background: #F3F4F6; 
-        color: #374151; 
+        background: var(--bg-mint);
+        color: var(--secondary-teal); 
         padding: 4px 8px; 
         border-radius: 6px; 
         font-size: 0.7rem; 
-        font-weight: 600; 
-        border: 1px solid #D1D5DB;
+        font-weight: 800; 
+        border: 1px solid var(--border-soft);
         display: inline-block;
     }
 
-    /* Penyeragaman List Peserta */
+    /* List Peserta */
     .participant-item {
         font-size: 0.7rem;
         font-weight: 600;
-        color: #4B5563;
-        background: #F9FAFB;
+        color: var(--secondary-teal);
+        background: white;
         padding: 2px 6px;
         border-radius: 4px;
-        border-left: 2px solid var(--primary-teal);
+        border: 1px solid var(--border-soft);
         margin-bottom: 2px;
     }
 </style>
@@ -109,15 +121,18 @@
 @section('content')
     {{-- HEADER --}}
     <div class="text-center mb-8">
-        <h1 class="text-2xl md:text-3xl font-extrabold uppercase text-[#2F5F5E] tracking-tight">Jadwal Kegiatan Hari Ini</h1>
-        <p class="text-[#5B4636] mt-1 font-semibold uppercase tracking-widest text-[10px] opacity-80">
-            {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }} | <span id="clock" class="font-bold">00:00:00</span> WIB
-        </p>
+        <h1 class="text-2xl md:text-3xl font-extrabold uppercase text-[#20B2AA] tracking-tight">Jadwal Kegiatan Hari Ini</h1>
+        <div class="inline-block px-4 py-1 mt-1 rounded-full bg-[#F0F9F8] border border-[#B2E2E0]"> 
+            <p class="text-[#1a9690] font-bold uppercase tracking-widest text-[10px]">
+                {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }} | <span id="clock">00:00:00</span> WIB
+            </p>
+        </div>
     </div>
 
     {{-- FILTER --}}
     <div class="flex justify-end mb-5">
-        <select id="opd-filter" onchange="filterOPD(this.value)" class="w-full md:w-72 p-3 rounded-xl bg-white border-2 border-[#D6D1C4] focus:ring-2 focus:ring-[#2F5F5E] outline-none font-bold text-[11px] uppercase cursor-pointer shadow-sm">
+        <select id="opd-filter" onchange="filterOPD(this.value)" 
+            class="w-full md:w-72 p-3 rounded-xl bg-white border-2 border-[#B2E2E0] focus:border-[#20B2AA] outline-none font-bold text-[11px] uppercase cursor-pointer shadow-sm text-[#1a9690] transition-all">
             <option value="all">🔍 SEMUA UNIT KERJA / OPD</option>
             @foreach($list_opd as $o)
                 <option value="{{ $o->id_opd }}">{{ $o->nama_opd }}</option>
@@ -143,12 +158,14 @@
                 <tbody id="kegiatan-body">
                     @forelse($kegiatan as $index => $item)
                     <tr class="kegiatan-row" data-opd="{{ $item->opd_id }}">
-                        <td class="text-center font-bold text-gray-400 iteration-count">{{ $index + 1 }}</td>
+                        <td class="text-center font-bold text-gray-300 iteration-count">{{ $index + 1 }}</td>
                         <td><div class="kegiatan-title">{{ $item->nama_kegiatan }}</div></td>
-                        <td class="text-center waktu-text">{{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }}</td>
+                        <td class="text-center">
+                            <span class="waktu-text">{{ \Carbon\Carbon::parse($item->waktu)->format('H:i') }}</span>
+                        </td>
                         <td>
                             <div class="flex items-start gap-1.5">
-                                <i class="fa-solid fa-location-dot text-[#2F5F5E] mt-0.5 text-[10px]"></i>
+                                <i class="fa-solid fa-location-dot text-[#20B2AA] mt-0.5 text-[10px]"></i>
                                 <span class="lokasi-text">{{ $item->lokasi }}</span>
                             </div>
                         </td>
@@ -160,7 +177,7 @@
                                     <div class="participant-item truncate">{{ $peserta->nama }}</div>
                                 @endforeach
                                 @if($item->pegawaiWajib->count() > 3)
-                                    <span class="text-[9px] font-bold text-[#2F5F5E] italic">
+                                    <span class="text-[9px] font-bold text-[#20B2AA] italic px-1">
                                         +{{ $item->pegawaiWajib->count() - 3 }} lainnya
                                     </span>
                                 @endif
@@ -169,8 +186,9 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-20 text-center text-gray-400 font-bold uppercase text-[11px]">
-                            Tidak ada jadwal kegiatan untuk saat ini
+                        <td colspan="7" class="py-20 text-center">
+                            <i class="fa-solid fa-calendar-xmark text-4xl text-[#B2E2E0] mb-3 block"></i>
+                            <p class="text-[#1a9690] opacity-40 font-bold uppercase text-[11px]">Tidak ada jadwal kegiatan untuk saat ini</p>
                         </td>
                     </tr>
                     @endforelse
