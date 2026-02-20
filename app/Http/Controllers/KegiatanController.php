@@ -64,7 +64,7 @@ class KegiatanController extends Controller
     {
         $request->validate([
             'status_pegawai'  => 'required|in:internal,eksternal',
-            'tipe_pegawai'    => 'required',
+            'tipe_peserta'    => 'required',
             'tanda_tangan'    => 'required',
             'latitude_hadir'  => 'required',
             'longitude_hadir' => 'required',
@@ -101,7 +101,7 @@ class KegiatanController extends Controller
             Kehadiran::create([
                 'pegawai_id'      => $pegawaiId,
                 'kegiatan_id'     => $id,
-                'tipe_pegawai'    => $request->tipe_pegawai,
+                'tipe_peserta'    => $request->tipe_peserta,
                 'status_pegawai'  => $request->status_pegawai,
                 'waktu_hadir'     => now(),
                 'latitude_hadir'  => $request->latitude_hadir,

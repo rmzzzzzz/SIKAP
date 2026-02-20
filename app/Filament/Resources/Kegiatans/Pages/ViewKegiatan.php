@@ -36,7 +36,7 @@ class ViewKegiatan extends ViewRecord
                         ->weight('bold'),
 
                     TextEntry::make('opd.nama_opd')
-                        ->label('OPD Penyelenggara'),
+                        ->label('OPD'),
                     TextEntry::make('pegawai.nama')
                         ->label('PIC'),
 

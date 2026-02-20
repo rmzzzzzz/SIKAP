@@ -19,10 +19,12 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Filament\Resources\Kehadirans\Widgets\KehadiranTable;  
+use App\Filament\Resources\Kehadirans\Widgets\KehadiranTable;
+
 class ViewKehadiran extends ViewRecord
 {
     protected static string $resource = KehadiranResource::class;
+
     protected function getActions(): array
     {
         return [
@@ -51,7 +53,7 @@ class ViewKehadiran extends ViewRecord
                     $record = $this->record;
                     $user   = Auth::user();
 
-                    if ($user->role !== 'operator') {
+                    if ($user->role === 'pimpinan') {
                         return false;
                     }
 
@@ -110,7 +112,18 @@ class ViewKehadiran extends ViewRecord
                     TextEntry::make('nama_kegiatan')->label('Kegiatan'),
                     TextEntry::make('opd.nama_opd')->label('OPD'),
                     TextEntry::make('pegawai.nama')->label('PIC'),
-                    TextEntry::make('tanggal','waktu_mulai','-','waktu_selesai')->datetime(),
+                    TextEntry::make('tanggal')
+                        ->label('Tanggal & Waktu')
+                        ->getStateUsing(function ($record) {
+                            return collect([
+                                $record->tanggal
+                                    ? \Carbon\Carbon::parse($record->tanggal)->translatedFormat('d F Y')
+                                    : '-',
+                                $record->waktu_mulai && $record->waktu_selesai
+                                    ? "{$record->waktu_mulai} - {$record->waktu_selesai}"
+                                    : '-'
+                            ])->implode(' | ');
+                        }),
                     TextEntry::make('lokasi'),
                     TextEntry::make('latitude')->numeric(),
                     TextEntry::make('longitude')->numeric(),
@@ -130,12 +143,12 @@ class ViewKehadiran extends ViewRecord
                 ]),
         ]);
     }
-protected function getFooterWidgets(): array
-{
-    return [
-        KehadiranTable::make([
-            'kegiatanId' => $this->record->id_kegiatan,
-        ]),
-    ];
-}  
+    protected function getFooterWidgets(): array
+    {
+        return [
+            KehadiranTable::make([
+                'kegiatanId' => $this->record->id_kegiatan,
+            ]),
+        ];
+    }
 }

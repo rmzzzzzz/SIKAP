@@ -43,6 +43,12 @@ class KehadiranTable extends TableWidget
                                     fn(string $state) =>
                                     $state === 'internal' ? 'success' : 'warning'
                                 ),
+                            TextColumn::make('tipe_peserta')
+                                ->label('Tipe Peserta')
+                                ->color(
+                                    fn(string $state) =>
+                                    $state === 'narasumber' ? 'primary' : 'success'
+                                ),
             ])
             ->filters([
                 //

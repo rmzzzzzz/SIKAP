@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 
@@ -14,6 +15,7 @@ class LaporansTable
     public static function configure(Table $table): Table
     {
         return $table
+        ->striped()
             ->columns([
                 TextColumn::make('kegiatan.nama_kegiatan')
                     ->label('Kegiatan'),
@@ -37,6 +39,14 @@ class LaporansTable
             ->filters([
                 //
             ])
+             ->recordActions([
+                EditAction::make()
+                    ->label(''),
+                DeleteAction::make()
+                    ->label('')
+                    ->requiresConfirmation()
+                    ->color('danger'), 
+            ])     
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),

@@ -110,11 +110,11 @@
                         <div>
                             <label class="block text-xs font-bold mb-3 text-gray-700 uppercase tracking-wider">Tipe Peserta</label>
                             <div class="grid grid-cols-2 gap-3">
-                                <input type="radio" id="narsum" name="tipe_pegawai" value="narasumber" class="hidden radio-custom" required>
+                                <input type="radio" id="narsum" name="tipe_peserta" value="narasumber" class="hidden radio-custom" required>
                                 <label for="narsum" class="block text-center py-2.5 rounded-xl border border-gray-200 cursor-pointer font-bold text-xs transition-all hover:bg-gray-50">Narasumber</label>
 
-                                <input type="radio" id="peserta" name="tipe_pegawai" value="pegawai" class="hidden radio-custom">
-                                <label for="peserta" class="block text-center py-2.5 rounded-xl border border-gray-200 cursor-pointer font-bold text-xs transition-all hover:bg-gray-50">Pegawai</label>
+                                <input type="radio" id="peserta" name="tipe_peserta" value="peserta" class="hidden radio-custom">
+                                <label for="peserta" class="block text-center py-2.5 rounded-xl border border-gray-200 cursor-pointer font-bold text-xs transition-all hover:bg-gray-50">Peserta</label>
                             </div>
                         </div>
                     </div>

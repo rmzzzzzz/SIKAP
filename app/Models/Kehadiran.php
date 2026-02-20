@@ -10,7 +10,7 @@ class Kehadiran extends Model
     protected $primaryKey = 'id_kehadiran';
 
     protected $fillable = [
-        'pegawai_id','kegiatan_id','tipe_pegawai','status_pegawai',
+        'pegawai_id','kegiatan_id','tipe_peserta','status_pegawai',
         'waktu_hadir','latitude_hadir','longitude_hadir','tanda_tangan'
     ];
 

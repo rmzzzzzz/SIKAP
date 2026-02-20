@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id('id_kehadiran');
         $table->unsignedBigInteger('pegawai_id');
         $table->unsignedBigInteger('kegiatan_id');
-        $table->enum('tipe_pegawai', ['narasumber', 'pegawai']);
+        $table->enum('tipe_peserta', ['narasumber', 'peserta']);
         $table->enum('status_pegawai', ['internal', 'eksternal']);
         $table->dateTime('waktu_hadir')->nullable();
         $table->decimal('latitude_hadir', 10, 7)->nullable();

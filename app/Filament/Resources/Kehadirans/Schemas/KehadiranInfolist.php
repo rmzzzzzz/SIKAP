@@ -15,7 +15,7 @@ class KehadiranInfolist
                     ->numeric(),
                 TextEntry::make('kegiatan_id')
                     ->numeric(),
-                TextEntry::make('tipe_pegawai')
+                TextEntry::make('tipe_peserta')
                     ->badge(),
                 TextEntry::make('status_pegawai')
                     ->badge(),

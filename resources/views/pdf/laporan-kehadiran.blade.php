@@ -87,14 +87,17 @@
         }
 
         .ttd-kanan {
-            width: 40%;
-            float: right;
             text-align: center;
+            width: 250px;       
+            float: right;
+            margin-top: 10px;
+            line-height: 1.2;
         }
 
         .ttd img {
-            width: 160px;
-            margin-top: 5px;
+            display: block;
+            height: 100px;        /* kecilkan tanda tangan */
+            margin: 2px auto;
         }
 
         .clear {
@@ -202,7 +205,7 @@
 {{-- TANDA TANGAN PIMPINAN --}}
 <div class="ttd">
     <div class="ttd-kanan">
-        <div>Sumenep, {{ now()->translatedFormat('d F Y') }}</div>
+        <div>Sumenep, {{ \Carbon\Carbon::parse($laporan->waktu_persetujuan)->translatedFormat('d F Y') }}</div>
         <div>Kepala</div>
 
         <img class="" src="{{ $laporan->ttd_pimpinan }}">

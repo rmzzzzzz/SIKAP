@@ -19,7 +19,7 @@ class KehadiranForm
                 TextInput::make('kegiatan_id')
                     ->required()
                     ->numeric(),
-                Select::make('tipe_pegawai')
+                Select::make('tipe_peserta')
                     ->options(['narasumber' => 'Narasumber', 'peserta' => 'Peserta'])
                     ->required(),
                 Select::make('status_pegawai')
