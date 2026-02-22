@@ -24,11 +24,13 @@ class KehadiranTable extends TableWidget
                     ->with(['pegawai.opd']))
             ->columns([
                 TextColumn::make('pegawai.nama')
-                                ->label('Nama'),
+                                ->label('Nama')
+                                 ->wrap(),
 
                             TextColumn::make('pegawai.jabatan')
                                 ->label('Jabatan'),
                              TextColumn::make('opd_display')
+                             ->wrap()
                                 ->label('OPD')
                                 ->getStateUsing(
                                     fn($record) =>

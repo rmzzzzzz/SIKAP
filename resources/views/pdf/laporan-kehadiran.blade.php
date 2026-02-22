@@ -77,6 +77,9 @@
         }
 
         table.absen td.nama,
+        table.absen td.opd,
+        table.absen td.alamat,
+        table.absen td.telp,
         table.absen td.jabatan {
             text-align: left;
         }
@@ -84,6 +87,11 @@
         .ttd {
             width: 100%;
             margin-top: 40px;
+        }
+        .ttd-peserta {
+            text-align: center;
+            width: 90px;
+            height: 25px;
         }
 
         .ttd-kanan {
@@ -96,7 +104,8 @@
 
         .ttd img {
             display: block;
-            height: 100px;        /* kecilkan tanda tangan */
+            width: 120px; /* ukuran tanda tangan */
+            height: 80px;       
             margin: 2px auto;
         }
 
@@ -157,7 +166,7 @@
 
 {{-- TABEL ABSENSI --}}
 @php
-    $chunks = $laporan->kegiatan->kehadiran->chunk(20);
+    $chunks = $laporan->kegiatan->kehadiran->chunk(18);
 @endphp
 
 @foreach ($chunks as $chunkIndex => $chunk)
@@ -172,9 +181,9 @@
                 <th width="5%">NO</th>
                 <th width="25%">NAMA</th>
 
-                @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
+                {{-- @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd') --}}
                     <th width="20%">OPD</th>
-                @endif
+                {{-- @endif --}}
 
                 <th width="20%">JABATAN</th>
                 <th width="15%">NO. TELP</th>
@@ -184,16 +193,16 @@
         <tbody>
             @foreach ($chunk as $i => $h)
                 <tr>
-                    <td>{{ ($chunkIndex * 20) + $i + 1 }}</td>
+                    <td>{{ ($chunkIndex * 0) + $i + 1 }}</td>
                     <td class="nama">{{ $h->pegawai->nama }}</td>
 
-                    @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd')
-                        <td>{{ $h->pegawai->opd->nama_opd ?? $h->pegawai->unit_kerja ?? '-' }}</td>
-                    @endif
+                    {{-- @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd') --}}
+                        <td class="opd">{{ $h->pegawai->opd->nama_opd ?? $h->pegawai->unit_kerja ?? '-' }}</td>
+                    {{-- @endif --}}
 
-                    <td>{{ $h->pegawai->jabatan }}</td>
-                    <td>{{ $h->pegawai->telp ?? '-' }}</td>
-                    <td>{{ ($chunkIndex * 20) + $i + 1 }}</td>
+                    <td class="jabatan">{{ $h->pegawai->jabatan }}</td>
+                    <td class="telp">{{ $h->pegawai->telp ?? '-' }}</td>
+                    <td > <img class="ttd-peserta" src="{{ $h->tanda_tangan}}" alt=""></td>
                 </tr>
             @endforeach
         </tbody>

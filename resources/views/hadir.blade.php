@@ -113,7 +113,7 @@
                                 <input type="radio" id="narsum" name="tipe_peserta" value="narasumber" class="hidden radio-custom" required>
                                 <label for="narsum" class="block text-center py-2.5 rounded-xl border border-gray-200 cursor-pointer font-bold text-xs transition-all hover:bg-gray-50">Narasumber</label>
 
-                                <input type="radio" id="peserta" name="tipe_peserta" value="peserta" class="hidden radio-custom">
+                                <input type="radio" id="peserta" name="tipe_peserta" value="peserta" class="hidden radio-custom" required>
                                 <label for="peserta" class="block text-center py-2.5 rounded-xl border border-gray-200 cursor-pointer font-bold text-xs transition-all hover:bg-gray-50">Peserta</label>
                             </div>
                         </div>
@@ -136,7 +136,15 @@
                             <i class="fa-solid fa-pen-nib text-8xl"></i>
                         </div>
                     </div>
-
+                    <div class="w-full bg-gray-50 border rounded-xl p-4 text-xs text-gray-600">
+    <label class="flex items-start gap-2 cursor-pointer">
+        <input type="checkbox" id="setujuCheck" class="mt-1 accent-[#20B2AA]">
+        <span>
+            Saya menyatakan bahwa data presensi yang saya isi adalah benar dan 
+            saya hadir pada kegiatan ini sesuai lokasi yang ditentukan.
+        </span>
+    </label>
+</div>
                     <div class="flex flex-col items-center space-y-6">
                         <div class="g-recaptcha scale-90 md:scale-100" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
 
@@ -149,7 +157,7 @@
         </div>
         
         <div class="bg-gray-50 py-4 px-6 text-center border-t border-gray-100 rounded-b-2xl">
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">BKPSDM KABUPATEN SUMENEP</p>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest"> KABUPATEN SUMENEP</p>
         </div>
     </div>
 </div>
@@ -158,7 +166,7 @@
 @push('scripts')
 <script>
 const TARGET_LOKASI = { lat: {{ $kegiatan->latitude }}, lng: {{ $kegiatan->longitude }} };
-const RADIUS_MAKSIMAL = 25; 
+const RADIUS_MAKSIMAL = 50; 
 const pegawai = @json($pegawai);
 const box = document.getElementById('dynamic-form');
 
@@ -171,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
             title: 'IZIN AKSES LOKASI',
             html: 'Aplikasi memerlukan akses GPS untuk memvalidasi kehadiran Anda.<br><small class="text-gray-500 italic">*Pastikan GPS Anda aktif</small>',
-            // UPDATE: Logo diperkecil, tanpa animasi, tanpa pembungkus div
+           
             iconHtml: '<i class="fa-solid fa-location-dot text-[#20B2AA]"></i>',
             showCloseButton: true,
             showCancelButton: false,
@@ -198,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 
-// Sisa fungsi JS Anda (getDistance, initLocationTracking, dll) tetap sama
+
 function getDistance(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -242,16 +250,45 @@ function renderForm(type){
     if(type === 'internal') {
         box.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
-                <div>
-                    <label class="text-[10px] font-bold text-gray-600 mb-1.5 block uppercase">Nama Pegawai (Min 3 Huruf)</label>
-                    <input id="namaInput" name="nama" class="w-full text-sm rounded-lg border" oninput="handleNamaInput(this.value)" required list="listNama" placeholder="Ketik minimal 3 huruf...">
-                    <datalist id="listNama"></datalist>
+
+                <!-- NAMA -->
+                <div class="relative">
+                    <label class="text-[10px] font-bold text-gray-600 mb-1.5 block uppercase">
+                        Nama Pegawai (Min 3 Huruf)
+                    </label>
+
+                    <input id="namaInput"
+                        name="nama"
+                        class="w-full text-sm rounded-lg border px-3 py-2"
+                        placeholder="Ketik minimal 3 huruf..."
+                        autocomplete="off"
+                        onkeyup="handleNamaInput(this.value)"
+                        required>
+
+                    <div id="namaDropdown"
+                        class="absolute z-50 w-full bg-white border rounded-xl shadow-xl mt-1 hidden max-h-60 overflow-auto">
+                    </div>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-600 mb-1.5 block uppercase">NIP</label>
-                    <input id="nipInput" name="nip" class="w-full text-sm rounded-lg border bg-white" placeholder="Isi Nama" oninput="handleNipInput(this.value)" required list="listNip">
-                    <datalist id="listNip"></datalist>
+
+                <!-- NIP -->
+                <div class="relative">
+                    <label class="text-[10px] font-bold text-gray-600 mb-1.5 block uppercase">
+                        NIP
+                    </label>
+
+                    <input id="nipInput"
+                        name="nip"
+                        class="w-full text-sm rounded-lg border px-3 py-2"
+                        placeholder="Ketik NIP..."
+                        autocomplete="off"
+                        onkeyup="handleNipInput(this.value)"
+                        required>
+
+                    <div id="nipDropdown"
+                        class="absolute z-50 w-full bg-white border rounded-xl shadow-xl mt-1 hidden max-h-60 overflow-auto">
+                    </div>
                 </div>
+
                 <input type="hidden" name="pegawai_id" id="pegawaiId">
             </div>
         `;
@@ -289,41 +326,89 @@ function renderForm(type){
 }
 
 function handleNamaInput(keyword){
-    const list = document.getElementById('listNama'); 
-    list.innerHTML = ''; 
-    if(keyword.length >= 3) {
-        const data = pegawai.filter(p => p.nama.toLowerCase().includes(keyword.toLowerCase()));
-        data.slice(0, 10).forEach(p => { 
-            const o = document.createElement('option'); 
-            o.value = p.nama; 
-            list.appendChild(o); 
-        });
-        const exact = data.find(p => p.nama === keyword);
-        if(exact) { 
-            document.getElementById('nipInput').value = exact.nip || ''; 
-            document.getElementById('pegawaiId').value = exact.id_pegawai; 
-        }
-    }
-}
 
+    const dropdown = document.getElementById('namaDropdown');
+    if(!dropdown) return;
+
+    dropdown.innerHTML = '';
+
+    if(!keyword || keyword.length < 3){
+        dropdown.classList.add('hidden');
+        return;
+    }
+
+    const hasil = pegawai
+        .filter(p => p.nama.toLowerCase().includes(keyword.toLowerCase()))
+        .slice(0,10);
+
+    if(hasil.length === 0){
+        dropdown.innerHTML =
+            `<div class="px-3 py-2 text-sm text-gray-400">Tidak ditemukan</div>`;
+    }
+
+    hasil.forEach(p => {
+        dropdown.innerHTML += `
+            <div onclick="pilihPegawai('${p.id_pegawai}','${p.nama}','${p.nip ?? ''}')"
+                class="px-3 py-2 cursor-pointer hover:bg-teal-50 border-b last:border-none">
+
+                <div class="font-semibold text-gray-800">${p.nama}</div>
+                <div class="text-xs text-gray-500">${p.nip ?? '-'}</div>
+            </div>
+        `;
+    });
+
+    dropdown.classList.remove('hidden');
+}
 function handleNipInput(keyword){
-    const list = document.getElementById('listNip'); 
-    list.innerHTML = '';
-    if(keyword.length >= 3) {
-        const data = pegawai.filter(p => p.nip && p.nip.includes(keyword));
-        data.slice(0, 10).forEach(p => { 
-            const o = document.createElement('option'); 
-            o.value = p.nip; 
-            list.appendChild(o); 
-        });
-        const exact = data.find(p => p.nip === keyword);
-        if(exact) { 
-            document.getElementById('namaInput').value = exact.nama; 
-            document.getElementById('pegawaiId').value = exact.id_pegawai; 
-        }
+
+    const dropdown = document.getElementById('nipDropdown');
+    if(!dropdown) return;
+
+    dropdown.innerHTML = '';
+
+    if(!keyword || keyword.length < 2){
+        dropdown.classList.add('hidden');
+        return;
     }
+
+    const hasil = pegawai
+        .filter(p => p.nip && p.nip.includes(keyword))
+        .slice(0,10);
+
+    if(hasil.length === 0){
+        dropdown.innerHTML =
+            `<div class="px-3 py-2 text-sm text-gray-400">Tidak ditemukan</div>`;
+    }
+
+    hasil.forEach(p => {
+        dropdown.innerHTML += `
+            <div onclick="pilihPegawai('${p.id_pegawai}','${p.nama}','${p.nip}')"
+                class="px-3 py-2 cursor-pointer hover:bg-teal-50 border-b last:border-none">
+
+                <div class="font-semibold text-gray-800">${p.nip}</div>
+                <div class="text-xs text-gray-500">${p.nama}</div>
+            </div>
+        `;
+    });
+
+    dropdown.classList.remove('hidden');
 }
 
+function pilihPegawai(id, nama, nip){
+    document.getElementById('namaInput').value = nama;
+    document.getElementById('nipInput').value = nip;
+    document.getElementById('pegawaiId').value = id;
+
+    document.getElementById('namaDropdown')?.classList.add('hidden');
+    document.getElementById('nipDropdown')?.classList.add('hidden');
+}
+document.addEventListener('click', function(e){
+    if(!e.target.closest('#namaInput'))
+        document.getElementById('namaDropdown')?.classList.add('hidden');
+
+    if(!e.target.closest('#nipInput'))
+        document.getElementById('nipDropdown')?.classList.add('hidden');
+});
 const canvas = document.getElementById('sig-pad');
 const ctx = canvas.getContext('2d');
 let drawing = false;
@@ -388,6 +473,15 @@ function validateForm(){
         Swal.fire({ icon: 'info', title: 'Captcha', text: 'Silakan selesaikan verifikasi Captcha.', confirmButtonColor: '#20B2AA' }); 
         return false; 
     }
+    if(!document.getElementById('setujuCheck')?.checked){
+    Swal.fire({
+        icon: 'warning',
+        title: 'Persetujuan',
+        text: 'Anda harus menyetujui pernyataan terlebih dahulu.',
+        confirmButtonColor: '#20B2AA'
+    });
+    return false;
+}
     Swal.fire({ 
         title: 'Mengirim Data...', 
         text: 'Sedang memproses presensi Anda',

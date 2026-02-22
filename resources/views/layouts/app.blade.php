@@ -19,7 +19,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(180deg, #F0F9F8 0%, #20B2AA 100%);
+            background-color: #c9f9f6cf; 
             background-attachment: fixed;
             overflow: hidden;
             color: #1A1A1A;
@@ -92,9 +92,32 @@
             padding-left: 1.5rem;
         }
 
+        /* SIMPLE LOGIN BUTTON ANIMATION */
+        .btn-login-simple {
+            transition: all 0.3s ease;
+        }
+
+        .btn-login-simple:hover {
+            transform: translateY(-2px);
+            background-color: #f0f9f8 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-login-simple i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-login-simple:hover i {
+            transform: translateX(4px);
+        }
+
         /* LOGO & BUTTON ANIMATION */
         #logoBtn {
-            padding: 0.7rem !important;
+            width: 45px; 
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 1rem !important;
             background: #20B2AA; 
             border: 2px solid rgba(255,255,255,0.3);
@@ -105,22 +128,11 @@
             box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
         }
 
-        @keyframes wobble {
-            0% { transform: translateX(0%); }
-            15% { transform: translateX(-15%) rotate(-5deg); }
-            30% { transform: translateX(10%) rotate(3deg); }
-            100% { transform: translateX(0%); }
-        }
-
         #logoBtn:hover {
-            animation: wobble 0.8s ease-in-out;
             transform: scale(1.05);
             background: #1a9690;
         }
 
-        /* ===============================
-            FANCY LOGO TEXT (PRESISI)
-           =============================== */
         h1.brand-fancy {
             font-family: 'Philosopher', sans-serif;
             font-size: 2.1rem !important;
@@ -143,25 +155,19 @@
             padding-left: 2px;
         }
 
-        /* PERUBAHAN DISINI: Teks Hitam & Terang */
         .header-right-text .title-top { 
             font-size: 0.65rem !important; 
             font-weight: 800; 
-            color: #111827 !important; /* Hitam pekat */
+            color: #111827 !important; 
         }
         
         .header-right-text .title-bottom { 
             font-size: 0.55rem !important; 
             letter-spacing: 0.2em !important; 
             font-weight: 800; 
-            color: #374151 !important; /* Hitam abu tua */
-            opacity: 1; /* Terlihat lebih terang/jelas */
+            color: #374151 !important; 
+            opacity: 1; 
             text-transform: uppercase; 
-        }
-
-        .page-header .border-r-2 { 
-            border-color: #111827 !important; /* Garis pembatas mengikuti warna teks hitam */
-            opacity: 0.15;
         }
     </style>
 
@@ -176,12 +182,10 @@
         
         <div class="p-8 pb-4 flex justify-between items-center border-b border-white/10">
             <div class="flex items-center gap-3">
-                <div class="bg-white p-2 rounded-xl">
-                    <i class="fa-solid fa-calendar-check text-[#20B2AA] text-lg"></i>
-                </div>
+                {{-- Bagian Logo Kalender telah dihapus --}}
                 <div class="flex flex-col">
-                    <h2 style="font-family: 'Philosopher', sans-serif;" class="text-2xl font-bold leading-none text-white">HADIR</h2>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-white/70 font-bold">Menu Navigasi</p>
+                    <h2 style="font-family: 'Philosopher', sans-serif;" class="text-2xl font-bold leading-none text-white uppercase">HADIR</h2>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-white/70 font-bold mt-1">Menu Navigasi</p>
                 </div>
             </div>
             <button id="closeSidebar" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-black/20 transition-colors">
@@ -201,8 +205,8 @@
 
         <div class="p-6 bg-black/10">
             <a href="{{ route('login') }}"
-                class="flex items-center justify-center gap-3 bg-white text-[#20B2AA] font-black py-4 rounded-2xl 
-                        transition-all active:scale-95 w-full uppercase text-xs tracking-widest hover:bg-[#f0f9f8]">
+                class="btn-login-simple flex items-center justify-center gap-3 bg-white text-[#20B2AA] font-black py-4 rounded-2xl 
+                        active:scale-95 w-full uppercase text-xs tracking-widest">
                 <i class="fa-solid fa-right-to-bracket"></i> LOGIN
             </a>
         </div>
@@ -212,7 +216,7 @@
         <header class="flex justify-between items-center page-header">
             <div class="flex items-center gap-4">
                 <div id="logoBtn">
-                    <i class="fa-solid fa-bars text-white"></i>
+                    <i class="fa-solid fa-bars text-white text-lg"></i>
                 </div>
                 <div class="flex flex-col justify-center">
                     <h1 class="brand-fancy">HADIR</h1>

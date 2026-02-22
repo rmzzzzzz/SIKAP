@@ -52,7 +52,9 @@ class KegiatanController extends Controller
     public function hadir($id)
     {
         $kegiatan = Kegiatan::with('opd')->findOrFail($id);
-        $pegawai = Pegawai::all();
+        $pegawai = Pegawai::with('opd') ->whereNotNull('opd_id')
+            ->orderBy('nama', 'asc')
+            ->get();
 
         return view('hadir', compact('kegiatan', 'pegawai'));
     }
