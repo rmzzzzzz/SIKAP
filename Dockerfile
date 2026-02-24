@@ -13,9 +13,7 @@ COPY . .
 # install PHP dependency
 RUN composer install --no-dev --optimize-autoloader
 
-# build Vite + Filament assets
-RUN php artisan filament:install || true
-RUN php artisan optimize:clear || true
+# build asset Filament + Vite
 RUN npm install
 RUN npm run build
 RUN php artisan filament:assets || true
