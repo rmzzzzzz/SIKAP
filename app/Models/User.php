@@ -5,7 +5,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable 
+class User extends Authenticatable implements FilamentUser
 {
       protected $fillable = [
         'pegawai_id','name','email','password','role'
@@ -17,10 +17,10 @@ class User extends Authenticatable
     // {
     //     return $this->role === 'super_admin' || $this->role === 'operator' || $this->role === 'pimpinan';
     // }
-        // public function canAccessPanel(Panel $panel): bool
-        // {
-        //     return in_array($this->role, ['super_admin', 'operator', 'pimpinan']);
-        // }
+        public function canAccessPanel(Panel $panel): bool
+        {
+            return in_array($this->role, ['super_admin', 'operator', 'pimpinan']);
+        }
 
     public function pegawai()
     {
