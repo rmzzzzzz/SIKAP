@@ -44,7 +44,7 @@ class ViewKehadiran extends ViewRecord
                         ->openable()
                         ->downloadable()
                         ->reorderable()
-                        ->maxFiles(5)
+                        ->maxFiles(10) //sesuaikan dengan kebutuhan
                         ->directory('laporan')
                         ->disk('public')
                         ->required()
@@ -120,7 +120,7 @@ class ViewKehadiran extends ViewRecord
                                     ? \Carbon\Carbon::parse($record->tanggal)->translatedFormat('d F Y')
                                     : '-',
                                 $record->waktu_mulai && $record->waktu_selesai
-                                    ? "{$record->waktu_mulai} - {$record->waktu_selesai}"
+                                    ? \Carbon\Carbon::parse($record->waktu_mulai)->translatedFormat('H:i') . " - " . \Carbon\Carbon::parse($record->waktu_selesai)->translatedFormat('H:i')
                                     : '-'
                             ])->implode(' | ');
                         }),

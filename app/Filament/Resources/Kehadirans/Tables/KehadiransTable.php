@@ -31,7 +31,7 @@ class KehadiransTable
                     ->searchable(),
                 TextColumn::make('lokasi')
                     ->searchable(),
-                TextColumn::make('tanggal')
+               TextColumn::make('tanggal,waktu_mulai,waktu_selesai')
                     ->label('Tanggal & Waktu')
                     ->getStateUsing(function ($record) {
                         return collect([
@@ -39,7 +39,7 @@ class KehadiransTable
                                 ? \Carbon\Carbon::parse($record->tanggal)->translatedFormat('d F Y')
                                 : '-',
                             $record->waktu_mulai && $record->waktu_selesai
-                                ? "{$record->waktu_mulai} - {$record->waktu_selesai}"
+                                ? \Carbon\Carbon::parse($record->waktu_mulai)->translatedFormat('H:i') . " - " . \Carbon\Carbon::parse($record->waktu_selesai)->translatedFormat('H:i')
                                 : '-'
                         ])->implode(' | ');
                     })

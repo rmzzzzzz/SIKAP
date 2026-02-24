@@ -14,6 +14,7 @@ class KehadiranTable extends TableWidget
      public ?int $kegiatanId = null;
 
     protected static ?string $heading = 'Daftar Kehadiran';
+     protected int | string | array $columnSpan = 'full';
     public function table(Table $table): Table
     {
         

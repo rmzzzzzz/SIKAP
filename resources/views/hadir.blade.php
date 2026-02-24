@@ -119,7 +119,7 @@
                         </div>
                     </div>
 
-                    <div id="dynamic-form" class="bg-gray-50 p-5 rounded-2xl border border-gray-100 min-h-[100px]">
+                    <div id="dynamic-form" class="bg-gray-200 p-5 rounded-2xl border border-gray-100 min-h-[100px]">
                         <div class="text-center text-gray-400 text-xs italic py-4">Silakan pilih status pegawai untuk mengisi data...</div>
                     </div>
                 </div>

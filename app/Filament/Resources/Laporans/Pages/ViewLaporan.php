@@ -24,6 +24,7 @@ use App\Filament\Resources\Laporans\Widgets\DokumentasiTable;
 class ViewLaporan extends ViewRecord
 {
     protected static string $resource = LaporanResource::class;
+    protected int | string | array $footerWidgetsColumns = 1;
     public function infolist(Schema $schema): Schema
     {
 
@@ -54,8 +55,7 @@ class ViewLaporan extends ViewRecord
                         ->dateTime('d M Y')
                         ->visible(fn($record) => $record->waktu_persetujuan),
                
-                ]),
-                  
+                ]),       
         ]);
     }
 

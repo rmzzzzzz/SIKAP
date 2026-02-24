@@ -26,9 +26,20 @@ class KegiatansTable
                 TextColumn::make('pegawai.nama')
                     ->label('PIC')
                     ->searchable(),
-                TextColumn::make('tanggal') ->wrap()
-                    ->date()
+                    TextColumn::make('tanggal,waktu_mulai,waktu_selesai')
+                    ->label('Tanggal & Waktu')
+                    ->getStateUsing(function ($record) {
+                        return collect([
+                            $record->tanggal
+                                ? \Carbon\Carbon::parse($record->tanggal)->translatedFormat('d F Y')
+                                : '-',
+                            $record->waktu_mulai && $record->waktu_selesai
+                                ? \Carbon\Carbon::parse($record->waktu_mulai)->translatedFormat('H:i') . " - " . \Carbon\Carbon::parse($record->waktu_selesai)->translatedFormat('H:i')
+                                : '-'
+                        ])->implode(' | ');
+                    })
                     ->searchable()
+                    ->wrap()
                     ->sortable(),
                 TextColumn::make('lokasi')
                     ->searchable(),

@@ -182,7 +182,7 @@
                 <th width="25%">NAMA</th>
 
                 {{-- @if ($laporan->kegiatan->akses_kegiatan === 'lintas_opd') --}}
-                    <th width="20%">OPD</th>
+                    <th width="20%">INSTANSI/UNSUR</th>
                 {{-- @endif --}}
 
                 <th width="20%">JABATAN</th>

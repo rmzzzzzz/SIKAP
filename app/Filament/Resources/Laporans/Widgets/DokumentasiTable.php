@@ -11,6 +11,7 @@ class DokumentasiTable extends TableWidget
     public ?int $laporanId = null;
 
     protected static ?string $heading = 'Dokumentasi Kegiatan';
+     protected int | string | array $columnSpan = 'full';
 
     protected static ?string $pollingInterval = null;
 
@@ -25,12 +26,14 @@ class DokumentasiTable extends TableWidget
                 Tables\Columns\ImageColumn::make('path')
                     ->label('Foto')
                     ->getStateUsing(fn ($record) => asset('storage/' . $record->path))
-                    ->height(150)
+                    ->height(500)
                     ->openUrlInNewTab(),
             ])
             ->contentGrid([
-                'md' => 3,
-                'xl' => 4,
+                'default' => 2,
+                'sm' => 3,
+                'lg' => 4,
+                'xl' => 5,
             ])
             ->paginated(false);
     }
