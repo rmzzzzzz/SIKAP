@@ -14,7 +14,7 @@ RUN composer install --no-dev --optimize-autoloader
 # build vite + filament
 RUN npm install
 RUN npm run build
-RUN php artisan filament:assets || true
+RUN php artisan filament:assets --force
 RUN php artisan optimize:clear || true
 
 CMD php artisan serve --host=0.0.0.0 --port=$PORT
