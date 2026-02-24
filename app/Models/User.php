@@ -13,10 +13,10 @@ class User extends Authenticatable implements FilamentUser
 
     protected $hidden = ['password'];
 
-    public function canAccessPanel(Panel $panel): bool
-    {
-        return $this->role === 'super_admin' || $this->role === 'operator' || $this->role === 'pimpinan';
-    }
+    // public function canAccessPanel(Panel $panel): bool
+    // {
+    //     return $this->role === 'super_admin' || $this->role === 'operator' || $this->role === 'pimpinan';
+    // }
 
     public function pegawai()
     {
